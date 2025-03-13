@@ -4,9 +4,9 @@ import { TUser } from "./user.interface";
 const userSchema= new Schema<TUser>({
     id:{type:String,required:true},
     password:{type:String,required:true},
-    needChangePassword:{type:Boolean,},
+    needChangePassword:{type:Boolean,default:true},
     role:{type:String, enum:['admin','faculty','student'],required:true},
-    status:{type:String, enum:['in-progress','blocked'],requirde:true},
+    status:{type:String, enum:['in-progress','blocked'],Default:'in-progress' },
     isDeleted:{type:Boolean,default:false}
 },
 {
