@@ -22,7 +22,7 @@ const localGuardianSchema= new Schema({
 
 const studentSchema= new Schema({
       id:{type:String,required:[true,'id is required'],unique:true},
-       user:{type:Schema.Types.ObjectId,required:[true,'user is required'],unique:true,ref:'User'},
+       user:{type:Schema.Types.ObjectId,required:[true,'user is required'],ref:'User'},
        name:{type:nameSchema},
        gender:{type:String,enum:['male','female','other']},
        dateOfBirth:{type:String},
@@ -33,13 +33,10 @@ const studentSchema= new Schema({
        permanentAddress:{type:String},
        guardian:{type:guardianSchema},
        localGuardian:{type:localGuardianSchema},
-       profileImage:{type:String},
-       
+       profileImage:{type:String},     
        academicDepartment:{type:String},
-       isDeleted:{type:Boolean},
-       createAt:Date,
-       updateAt:Date
-
+       isDeleted:{type:Boolean}
+      
 })
 
 export  const Student= model('students',studentSchema)
