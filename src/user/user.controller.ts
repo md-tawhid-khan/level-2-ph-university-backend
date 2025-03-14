@@ -1,10 +1,19 @@
+
 import { status } from 'http-status';
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { userServices } from "./user.service";
 import sendResponse from "../utily/sendResponse";
 
-const createStudent=async(req:Request,res:Response,next:NextFunction)=>{
-    try {
+
+const catchAsync=(fn:RequestHandler)=>{
+    return(req:Request,res:Response,next:NextFunction)=>{
+    Promise.resolve(fn(req,res,next)).catch(error=>next(error))
+    }
+}
+
+
+const createStudent:RequestHandler=catchAsync(async(req,res,next)=>{
+    // try {
         const {password,student:studentData}=req.body;
 
         const result=await userServices.createStudentIntoDB(password,studentData)
@@ -19,16 +28,16 @@ const createStudent=async(req:Request,res:Response,next:NextFunction)=>{
             message:'Student is retrived successfully',
             data:result
         })
-   }
-     catch (error) {
-        // res.json({
-        //     status:false,
-        //     message:'something went wrong',
-        //     error
-        // })
-        next(error)
-    }
-}
+//    }
+    //  catch (error) {
+    //     // res.json({
+    //     //     status:false,
+    //     //     message:'something went wrong',
+    //     //     error
+    //     // })
+    //     next(error)
+    // }
+})
 
 export const  userController={
     createStudent
