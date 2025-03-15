@@ -38,6 +38,7 @@ const getAllStudent=catchAsync(async(req,res)=>{
 
   const deleteStudent=catchAsync(async(req,res)=>{
     const id=req.params.studentId;
+   
     const result=await studentService.deleteStudent(id)
     sendResponse(res,{
         statusCode:status.OK,
