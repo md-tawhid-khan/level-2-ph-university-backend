@@ -1,18 +1,14 @@
 
 import { status } from 'http-status';
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import {  RequestHandler} from "express";
 import { userServices } from "./user.service";
 import sendResponse from "../utily/sendResponse";
+import catchAsync from '../utily/catchAsync';
 
 
-const catchAsync=(fn:RequestHandler)=>{
-    return(req:Request,res:Response,next:NextFunction)=>{
-    Promise.resolve(fn(req,res,next)).catch(error=>next(error))
-    }
-}
 
 
-const createStudent:RequestHandler=catchAsync(async(req,res,next)=>{
+const createStudent:RequestHandler=catchAsync(async(req,res,)=>{
     // try {
         const {password,student:studentData}=req.body;
 
