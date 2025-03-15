@@ -33,8 +33,7 @@ export type TStudent={
     permanentAddress:string,
     guardian:TGuardian,
     localGuardian:TlocalGuardian,
-    profileImage:string,
-    
+    profileImage:string,   
     academicDepartment:string,
     isDeleted:boolean,
     createAt:Date,

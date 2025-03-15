@@ -1,7 +1,5 @@
-
 import express, { Application,  Request, Response } from 'express';
 import cors from 'cors';
-
 import globalErrorHandler from './middleware/globalErrorHandler';
 import notFounds from './middleware/notFound';
 import router from './routes';

@@ -13,6 +13,18 @@ const getAllStudent=catchAsync(async(req,res)=>{
     })
   })
 
+  const getSingleStudent=catchAsync(async(req,res)=>{
+    const id=req.params.studentId;
+    const result=await studentService.getSingleStudent(id)
+    sendResponse(res,{
+        statusCode:status.OK,
+        success:true,
+        message:'get single data successfully',
+        data:result
+    })
+  })
+
   export const studentController={
-    getAllStudent
+    getAllStudent,
+    getSingleStudent
   }
