@@ -1,3 +1,4 @@
+import { TStudent } from "./student.interface"
 import { Student } from "./student.model"
 
 const getAllStudent=async()=>{
@@ -10,7 +11,18 @@ const getSingleStudent=async(id:string)=>{
     return result
 }
 
+const updateStudent =async(id:string,data:TStudent)=>{
+    const result = await Student.findByIdAndUpdate(id,data,{new:true})
+    return result
+}
+
+const deleteStudent = async(id:string)=>{
+    const result = await Student.findByIdAndDelete(id,{new:true})
+    return result
+}
 export const studentService={
     getAllStudent,
-    getSingleStudent
+    getSingleStudent,
+    updateStudent,
+    deleteStudent
 }
