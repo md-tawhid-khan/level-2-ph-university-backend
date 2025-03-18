@@ -12,12 +12,28 @@ const findLastStudentId=async()=>{
     },).sort(
         {createdAt:-1}).lean()
 
-        return lastStudent?.id? lastStudent.id.substring(6) : undefined
+        return lastStudent?.id? lastStudent.id : undefined
 }
 
 // generated id autometically 
 export const generateStudentId=async(payload:TAcademicSemester)=>{
-    const currentId=(await findLastStudentId()) || (0).toString()
+    // first time 0000
+    //0001 =>1
+
+    let currentId=(0).toString()
+
+    const lastStudentId=await findLastStudentId();
+    //2030 01 0001
+    const lastStudentSemesterCode=lastStudentId?.substring(4,6);
+    const lastStudentSemesterYear=lastStudentId?.substring(0,4);
+    const currentSemesterCode=payload.code;
+    const currentYear=payload.year;
+
+    // console.log({lastStudentId,lastStudentSemesterCode,lastStudentSemesterYear,currentSemesterCode,currentYear})
+
+    if(lastStudentId && lastStudentSemesterCode === currentSemesterCode && lastStudentSemesterYear === currentYear){
+        currentId=lastStudentId.substring(6)
+    }
 
     let incrementId=(Number(currentId)+1).toString().padStart(4,'0')
 
