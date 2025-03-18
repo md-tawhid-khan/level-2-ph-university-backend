@@ -1,40 +1,41 @@
-import { Types } from "mongoose"
+import { Types } from 'mongoose';
 
-export type TName={
-    firstName:string,
-    middleName?:string,
-    lastName:string
-}
+export type TName = {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+};
 
-export type TGuardian={
-    name:string,
-    relationWithStudent:string,
-    ocupation:string,
-    contactNo:string,
-}
+export type TGuardian = {
+  name: string;
+  relationWithStudent: string;
+  ocupation: string;
+  contactNo: string;
+};
 
-export type TlocalGuardian={
-    name:string,
-    relationWithStudent:string,
-    ocupation:string,
-    contactNo:string,
-}
+export type TlocalGuardian = {
+  name: string;
+  relationWithStudent: string;
+  ocupation: string;
+  contactNo: string;
+};
 
-export type TStudent={
-    user:Types.ObjectId,
-    name:TName,
-    gender:'male'|'female'|'other',
-    dateOfBirth:string,
-    email:string,
-    contactNo:string,
-    emergencyContactNo:string,
-    presentAddress:string,
-    permanentAddress:string,
-    guardian:TGuardian,
-    localGuardian:TlocalGuardian,
-    profileImage:string,   
-    academicDepartment:string,
-    createAt:Date,
-    updateAt:Date
-
-}
+export type TStudent = {
+  id: string;
+  user: Types.ObjectId;
+  name: TName;
+  gender: 'male' | 'female' | 'other';
+  dateOfBirth: string;
+  email: string;
+  contactNo: string;
+  emergencyContactNo: string;
+  presentAddress: string;
+  permanentAddress: string;
+  guardian: TGuardian;
+  localGuardian: TlocalGuardian;
+  profileImage: string;
+  admissionSemester:Types.ObjectId,
+  academicDepartment: string;
+  createAt: Date;
+  updateAt: Date;
+};
