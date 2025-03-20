@@ -25,7 +25,7 @@ const studentSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     required: [true, 'user is required'],
-    ref: 'User',
+    ref: 'user',
   },
   name: { type: nameSchema },
   gender: { type: String, enum: ['male', 'female', 'other'] },
@@ -39,8 +39,8 @@ const studentSchema = new Schema({
   localGuardian: { type: localGuardianSchema },
   profileImage: { type: String },
   admissionSemester:{type:Schema.Types.ObjectId,
-                       ref:'AcademicSemester'},
-  academicDepartment: { type: String },
+                       ref:'academicSemester'},
+  academicDepartment: { type: Schema.Types.ObjectId,ref:'academicDepartment'},
 });
 
 export const Student = model('students', studentSchema);

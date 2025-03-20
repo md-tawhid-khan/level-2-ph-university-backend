@@ -1,4 +1,4 @@
-import { TAcademicSemester } from './../academicSemester/academicSemester.interface';
+
 import config from '../app/config';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
