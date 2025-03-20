@@ -6,6 +6,7 @@ import { TUser } from './user.interface';
 import { User } from './user.model';
 import AcademicSemester from '../academicSemester/academicSemester.model';
 import { generateStudentId } from './user.utily';
+import appError from '../errors/appErrors';
 
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
@@ -25,7 +26,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const admissionSemester = await AcademicSemester.findById(payload.admissionSemester)
 
   if (!admissionSemester) {
-    throw new Error("Academic semester not found");
+    throw new appError(404,"Academic semester not found");
   }
   // set manually generated it
   userData.id =await generateStudentId(admissionSemester)
