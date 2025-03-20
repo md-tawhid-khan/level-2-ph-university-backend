@@ -40,7 +40,9 @@ const studentSchema = new Schema({
   profileImage: { type: String },
   admissionSemester:{type:Schema.Types.ObjectId,
                        ref:'academicSemester'},
-  academicDepartment: { type: Schema.Types.ObjectId,ref:'academicDepartment'},
+  academicDepartment: { type: Schema.Types.ObjectId,require:true,
+                       ref:'academicDepartment'},
+  isDeleted:{type:Boolean}                     
 });
 
 export const Student = model('students', studentSchema);

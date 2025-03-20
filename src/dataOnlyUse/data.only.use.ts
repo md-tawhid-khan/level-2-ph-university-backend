@@ -27,6 +27,7 @@ const studentData=
     },
     "profileImage":"https:shfkjhgkl",
   "admissionSemester":"67d8cc67f05d818e34a0c878",
-  "academicDepartment":"English"
+  "academicDepartment":"English",
+  "isDeleted":false
 }
 }
