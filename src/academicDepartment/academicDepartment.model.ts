@@ -3,8 +3,8 @@ import { TAcademicDepartment } from "./academicDepartment.interface";
 import appError from "../errors/appErrors";
 
 const academicDepartmentSchema=new Schema<TAcademicDepartment>({
-    name:{type:String,require:true},
-    academicFaculty:{type:Schema.Types.ObjectId,ref:"AcademicFaculty"}
+    name:{type:String,required:true,unique:true},
+    academicFaculty:{type:Schema.Types.ObjectId,ref:"AcademicFaculty",}
 },{
     timestamps:true
 })
