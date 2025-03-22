@@ -5,6 +5,7 @@ import appError from '../errors/appErrors';
 import status from 'http-status';
 import { User } from '../user/user.model';
 
+
 const getAllStudent = async () => {
   const result = await Student.find().populate('admissionSemester').populate({
     path:'academicDepartment',
@@ -16,7 +17,7 @@ const getAllStudent = async () => {
 };
 
 const getSingleStudent = async (id: string) => {
-  const result = await Student.findOne({ _id: id }).populate('admissionSemester').populate({
+  const result = await Student.findOne({id}).populate('admissionSemester').populate({
     path:'academicDepartment',
     populate:{
       path:'academicFaculty'
@@ -25,8 +26,33 @@ const getSingleStudent = async (id: string) => {
   return result;
 };
 
-const updateStudent = async (id: string, data: TStudent) => {
-  const result = await Student.findByIdAndUpdate(id, data, { new: true });
+const updateStudent = async (id: string, data:Partial<TStudent>) => {
+
+  const {name,guardian,localGuardian, ...remainingStudentData}=data ;
+
+  const modifiedUpdateData:Record<string,unknown>={
+    ...remainingStudentData
+  } 
+
+  if(name && Object.keys(name).length){
+    for(const [key,value] of Object.entries(name)){
+      modifiedUpdateData[`name.${key}`]=value ;
+    }
+  }
+
+  if(guardian && Object.keys(guardian).length) {
+    for(const [key,value] of Object.entries(guardian)){
+      modifiedUpdateData[`guardian.${key}`]=value;
+    }
+  }
+
+  if(localGuardian && Object.keys(localGuardian).length){
+    for(const [key,value] of Object.entries(localGuardian)){
+      modifiedUpdateData[`localGuardian.${key}`]=value;
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({id}, modifiedUpdateData, { new: true,runValidators:true }); 
   return result;
 };
 
@@ -54,6 +80,7 @@ const deleteStudent = async (id: string) => {
   } catch (error) {
      await session.abortTransaction()
      await session.endSession()
+     throw new appError(status.BAD_REQUEST,"failed to delete student")
   }
   
 };

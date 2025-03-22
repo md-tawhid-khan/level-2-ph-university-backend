@@ -17,6 +17,7 @@ const gurdianValidation = z.object({
   ocupation: z.string(),
   contactNo: z.string(),
 });
+
 const localGurdianValidation = z.object({
   name: z.string(),
   relationWithStudent: z.string(),
@@ -24,7 +25,7 @@ const localGurdianValidation = z.object({
   contactNo: z.string(),
 });
 
-const studentValidation = z.object({
+const createStudentValidation = z.object({
   body: z.object({
     student: z.object({
       name: userNameValidation,
@@ -44,4 +45,54 @@ const studentValidation = z.object({
   }),
 });
 
-export default studentValidation;
+const updatedUserNameValidation = z.object({
+  firstName: z
+    .string()
+    .min(1)
+    .max(20)
+    .refine((value) => /^[A-Z]/.test(value), {
+      message: 'First Name must start with a capital letter',
+    }).optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().optional(),
+});
+
+const updatedGurdianValidation = z.object({
+  name: z.string().optional(),
+  relationWithStudent: z.string().optional(),
+  ocupation: z.string().optional(),
+  contactNo: z.string().optional(),
+});
+
+const updatedLocalGurdianValidation = z.object({
+  name: z.string().optional(),
+  relationWithStudent: z.string().optional(),
+  ocupation: z.string().optional(),
+  contactNo: z.string().optional(),
+});
+
+const updatedStudentValidation = z.object({
+  body: z.object({
+    student: z.object({
+      name: updatedUserNameValidation,
+      gender: z.enum(['male', 'female', 'other']).optional(),
+      dateOfBirth: z.string().optional(),
+      email: z.string().optional(),
+      contactNo: z.string().optional(),
+      emergencyContactNo: z.string().optional(),
+      presentAddress: z.string().optional(),
+      permanentAddress: z.string().optional(),
+      guardian: updatedGurdianValidation.optional(),
+      localGuardian: updatedLocalGurdianValidation.optional(),
+      profileImage: z.string().optional(),
+      admissionSemester:z.string().optional(),
+      academicDepartment: z.string().optional(),
+    }),
+  })
+});
+
+export const studentValidation={
+  createStudentValidation,
+  updatedStudentValidation,
+};
+
