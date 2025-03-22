@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler, } from 'express';
 import { ZodError,} from 'zod';
-import { TErrorSource } from '../interface/error';
 import config from '../app/config';
-import { handleZodError } from '../interface/globalErrorHandler';
+import { handleZodError } from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
+import { TErrorSources } from '../interface/error';
+
 
 
 
@@ -19,7 +21,7 @@ const globalErrorHandler:ErrorRequestHandler = (
   let statusCode = error.statusCode || 500;
   let message = error.message || 'something went wrong';
 
-  let errorSources:TErrorSource =[{
+  let errorSources:TErrorSources =[{
        path:'',
        message:'something went wrong'
   }]
@@ -30,7 +32,13 @@ const globalErrorHandler:ErrorRequestHandler = (
       message=simplifyError?.message ;
       errorSources = simplifyError?.errorSources;   
    }
-   
+   else if(error?.name === "ValidationError"){
+   const simplifyError=handleValidationError(error)
+   statusCode=simplifyError?.statusCode;
+   message=simplifyError?.message ;
+   errorSources=simplifyError?.errorSources ;
+   }
+
 
 //ultimate return 
 
@@ -38,7 +46,7 @@ const globalErrorHandler:ErrorRequestHandler = (
     success: false,
     message,
     errorSources,
-    error,
+    // error,
     stack:config.NODE_ENV==='development' ? error?.stack : null
   });
 
