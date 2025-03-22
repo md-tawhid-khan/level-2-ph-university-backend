@@ -6,6 +6,7 @@ import config from '../app/config';
 import { handleZodError } from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import { TErrorSources } from '../interface/error';
+import handleCastError from '../errors/handleCastError';
 
 
 
@@ -38,6 +39,12 @@ const globalErrorHandler:ErrorRequestHandler = (
    message=simplifyError?.message ;
    errorSources=simplifyError?.errorSources ;
    }
+   else if(error?.name === "CastError"){
+    const simplifyError=handleCastError(error) 
+    statusCode=simplifyError?.statusCode ;
+    message = simplifyError?.message ;
+    errorSources = simplifyError?.errorSources
+  }
 
 
 //ultimate return 
