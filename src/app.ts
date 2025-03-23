@@ -9,11 +9,19 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
+//application route
+
 app.use('/api/v1', router);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('well come to my  ph university server');
-});
+const test=async(req,res)=>{
+
+  const a=10;
+  const b=12 ;
+  res.send(`total value : ${a+b}`)
+}
+
+
+app.get('/', test) 
 
 app.use(globalErrorHandler);
 app.use(notFounds);
