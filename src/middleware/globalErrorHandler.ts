@@ -7,6 +7,7 @@ import { handleZodError } from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import { TErrorSources } from '../interface/error';
 import handleCastError from '../errors/handleCastError';
+import handleDuplicateError from '../errors/handleDuplicateError';
 
 
 
@@ -44,6 +45,12 @@ const globalErrorHandler:ErrorRequestHandler = (
     statusCode=simplifyError?.statusCode ;
     message = simplifyError?.message ;
     errorSources = simplifyError?.errorSources
+  }
+  else if(error?.code === 11000){
+    const simplifyError=handleDuplicateError(error)
+    statusCode=simplifyError?.statusCode ;
+    message=simplifyError?.message ;
+    errorSources=simplifyError?.errorSources
   }
 
 

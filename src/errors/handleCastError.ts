@@ -7,7 +7,7 @@ const handleCastError=(error:mongoose.Error.CastError):TGenericErrorResponse=>{
         message:error.message
     }    ]
 
-    const message="invalid id";
+    const message="Invalid Id";
     const statusCode=400;
     return {
         statusCode,
