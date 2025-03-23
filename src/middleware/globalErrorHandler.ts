@@ -8,6 +8,7 @@ import handleValidationError from '../errors/handleValidationError';
 import { TErrorSources } from '../interface/error';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
+import appError from '../errors/appErrors';
 
 
 
@@ -51,6 +52,21 @@ const globalErrorHandler:ErrorRequestHandler = (
     statusCode=simplifyError?.statusCode ;
     message=simplifyError?.message ;
     errorSources=simplifyError?.errorSources
+  }
+  else if(error instanceof appError){
+    statusCode=error.statusCode;
+    message=error.message ;
+    errorSources=[{
+    path:'',
+    message:error.message
+  }]
+  }
+  else if(error instanceof Error) {
+    message=error.message;
+    errorSources=[{
+      path:'', 
+      message:error.message
+    }]
   }
 
 
