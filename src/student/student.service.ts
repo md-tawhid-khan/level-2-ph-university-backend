@@ -6,8 +6,24 @@ import status from 'http-status';
 import { User } from '../user/user.model';
 
 
-const getAllStudent = async () => {
-  const result = await Student.find().populate('admissionSemester').populate({
+const getAllStudent = async (query:Record<string,unknown>) => {
+
+  //{email:{$regex : query.searchTeam,$option:'i'}}
+  //{'name.firstName':{$regex:query.searchTeam,$option:'i'}}
+  //{presentAddress:{$regex:query.searchTeam,$option:'i'}}
+
+  let searchTeam = '' ;
+
+  if(query?.searchTeam){
+    searchTeam=query?.searchTeam as string ;
+  }
+
+  const result = await Student.find({
+      $or:['email','name.firstName','presentAddress'].map((field)=>({
+        [field]:{$regex:searchTeam, $options:'i'}
+      }))
+    }
+  ).populate('admissionSemester').populate({
     path:'academicDepartment',
     populate:{
       path:'academicFaculty'

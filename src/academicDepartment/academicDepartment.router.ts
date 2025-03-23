@@ -7,7 +7,7 @@ import { academicDepartmentValidation } from "./academicDepartment.validation";
 const router=Router()
 
 router.post('/create-academic-department',
-    // validateRequest(academicDepartmentValidation.createAcademicDepartmentValidation),
+    validateRequest(academicDepartmentValidation.createAcademicDepartmentValidation),
     academicDepartmentController.createAcademicDepartment)
 
 router.get('/',academicDepartmentController.getAllAcademicDepartment)

@@ -65,6 +65,7 @@ try {
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create student")
+  
 }
 
   

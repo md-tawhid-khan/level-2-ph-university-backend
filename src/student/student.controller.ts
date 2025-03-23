@@ -5,7 +5,8 @@ import catchAsync from '../utily/catchAsync';
 import { RequestHandler } from 'express';
 
 const getAllStudent: RequestHandler = catchAsync(async (req, res) => {
-  const result = await studentService.getAllStudent();
+  
+  const result = await studentService.getAllStudent(req.query);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
