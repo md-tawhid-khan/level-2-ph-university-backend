@@ -8,7 +8,7 @@ import { User } from '../user/user.model';
 
 const getAllStudent = async (query:Record<string,unknown>) => {
 
-
+// get all student data without query  
   if(Object.keys(query).length===0){
     const result=await Student.find().populate('admissionSemester').populate({
       path:'academicDepartment',
@@ -19,6 +19,8 @@ const getAllStudent = async (query:Record<string,unknown>) => {
     return result
   }
 
+  // If query is provided, proceed with search, filtering, pagination,  sorting, and select 
+
   // {email:{$regex : query.searchTerm,$option:'i'}}
   // {'name.firstName':{$regex:query.searchTerm,$option:'i'}}
   // {presentAddress:{$regex:query.searchTerm,$option:'i'}}
@@ -28,6 +30,8 @@ const getAllStudent = async (query:Record<string,unknown>) => {
 
  
    const studentSearchableField=['email','name.firstName','presentAddress'] ;
+
+   //searching
 
    let searchTerm ='' ; 
   if(query?.searchTerm){
@@ -43,8 +47,9 @@ const getAllStudent = async (query:Record<string,unknown>) => {
 );
 
 
+  //filtering
 
-  const excludeField=['searchTerm','sort','limit','page'] ;
+  const excludeField=['searchTerm','sort','limit','page','fields'] ;
   
   excludeField.forEach((el)=>delete queryObject[el]) ;
 
@@ -57,6 +62,8 @@ const getAllStudent = async (query:Record<string,unknown>) => {
     }
   }).populate('user');
 
+  //sorting
+
   let sort='-createdAt'
 
   if(query.sort){
@@ -64,6 +71,8 @@ const getAllStudent = async (query:Record<string,unknown>) => {
   }
   
   const sortQuery= filterQuery.sort(sort)
+
+  //limiting
 
   let page = 1 ;
   let limit = 1 ;
@@ -78,17 +87,25 @@ const getAllStudent = async (query:Record<string,unknown>) => {
   if(query.limit){
     limit=Number(query.limit )
   }
+
+  
    
  const paginationQuery=sortQuery.skip(skip)
 
- const limitQuery =await paginationQuery.limit(limit)
+ const limitQuery = paginationQuery.limit(limit)
 
+//fields limiting
 
+  let fields='-__v'
 
-     return limitQuery
+  if(query.fields){
+    fields=(query.fields as string).split(',').join(' ')
+    // console.log({fields})
+  }
 
+  const fieldQuery=await limitQuery.select(fields)
 
-
+     return fieldQuery
 
 };
 
