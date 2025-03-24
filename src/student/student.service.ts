@@ -8,24 +8,33 @@ import { User } from '../user/user.model';
 
 const getAllStudent = async (query:Record<string,unknown>) => {
 
-  //{email:{$regex : query.searchTerm,$option:'i'}}
-  //{'name.firstName':{$regex:query.searchTerm,$option:'i'}}
-  //{presentAddress:{$regex:query.searchTerm,$option:'i'}}
+
+  if(Object.keys(query).length===0){
+    const result=await Student.find().populate('admissionSemester').populate({
+      path:'academicDepartment',
+      populate:{
+        path:'academicFaculty'
+      }
+    }).populate('user');
+    return result
+  }
+
+  // {email:{$regex : query.searchTerm,$option:'i'}}
+  // {'name.firstName':{$regex:query.searchTerm,$option:'i'}}
+  // {presentAddress:{$regex:query.searchTerm,$option:'i'}}
 
  
-  
   const queryObject={...query}
-  
-  // console.log(query,)
 
-
-  let searchTerm = '' ;
+ 
    const studentSearchableField=['email','name.firstName','presentAddress'] ;
 
+   let searchTerm ='' ; 
   if(query?.searchTerm){
     searchTerm=query?.searchTerm as string ;
   } ;
 
+  
   const searchQuery= Student.find({
     $or:studentSearchableField.map((field)=>({
       [field]:{$regex:searchTerm, $options:'i'}
@@ -33,10 +42,13 @@ const getAllStudent = async (query:Record<string,unknown>) => {
   }
 );
 
-  const excludeField=['searchTerm','sort','limit'] ;
+
+
+  const excludeField=['searchTerm','sort','limit','page'] ;
+  
   excludeField.forEach((el)=>delete queryObject[el]) ;
 
-  // console.log(queryObject)
+  console.log({query},{queryObject})
 
   const filterQuery =  searchQuery.find(queryObject).populate('admissionSemester').populate({
     path:'academicDepartment',
@@ -53,14 +65,30 @@ const getAllStudent = async (query:Record<string,unknown>) => {
   
   const sortQuery= filterQuery.sort(sort)
 
-  let limit=1 ;
-  if(query?.limit){
-    limit=query?.limit as number
+  let page = 1 ;
+  let limit = 1 ;
+  let skip = 0 ;
+
+  if(query.page){
+    page=Number(query.page)  ;
+    skip=Number((page-1)*10) ;
+    limit=Number(query.limit) ;
+  }
+  
+  if(query.limit){
+    limit=Number(query.limit )
   }
    
-  const limitQuery =await sortQuery.limit(limit)
+ const paginationQuery=sortQuery.skip(skip)
 
-   return limitQuery
+ const limitQuery =await paginationQuery.limit(limit)
+
+
+
+     return limitQuery
+
+
+
 
 };
 
