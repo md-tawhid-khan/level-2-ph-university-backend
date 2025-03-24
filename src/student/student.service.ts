@@ -8,28 +8,60 @@ import { User } from '../user/user.model';
 
 const getAllStudent = async (query:Record<string,unknown>) => {
 
-  //{email:{$regex : query.searchTeam,$option:'i'}}
-  //{'name.firstName':{$regex:query.searchTeam,$option:'i'}}
-  //{presentAddress:{$regex:query.searchTeam,$option:'i'}}
+  //{email:{$regex : query.searchTerm,$option:'i'}}
+  //{'name.firstName':{$regex:query.searchTerm,$option:'i'}}
+  //{presentAddress:{$regex:query.searchTerm,$option:'i'}}
 
-  let searchTeam = '' ;
+ 
+  
+  const queryObject={...query}
+  
+  // console.log(query,)
 
-  if(query?.searchTeam){
-    searchTeam=query?.searchTeam as string ;
+
+  let searchTerm = '' ;
+   const studentSearchableField=['email','name.firstName','presentAddress'] ;
+
+  if(query?.searchTerm){
+    searchTerm=query?.searchTerm as string ;
+  } ;
+
+  const searchQuery= Student.find({
+    $or:studentSearchableField.map((field)=>({
+      [field]:{$regex:searchTerm, $options:'i'}
+    }))
   }
+);
 
-  const result = await Student.find({
-      $or:['email','name.firstName','presentAddress'].map((field)=>({
-        [field]:{$regex:searchTeam, $options:'i'}
-      }))
-    }
-  ).populate('admissionSemester').populate({
+  const excludeField=['searchTerm','sort','limit'] ;
+  excludeField.forEach((el)=>delete queryObject[el]) ;
+
+  // console.log(queryObject)
+
+  const filterQuery =  searchQuery.find(queryObject).populate('admissionSemester').populate({
     path:'academicDepartment',
     populate:{
       path:'academicFaculty'
     }
   }).populate('user');
-  return result;
+
+  let sort='-createdAt'
+
+  if(query.sort){
+    sort=query.sort as string
+  }
+  
+  const sortQuery= filterQuery.sort(sort)
+
+  let limit=1 ;
+  if(query?.limit){
+    limit=query?.limit as number
+  }
+   
+  const limitQuery =await sortQuery.limit(limit)
+
+   return limitQuery
+
 };
 
 const getSingleStudent = async (id: string) => {
