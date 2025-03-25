@@ -43,12 +43,17 @@ const studentSchema = new Schema({
   academicDepartment: { type: Schema.Types.ObjectId,require:true,
                        ref:'academicDepartment'},
   isDeleted:{type:Boolean}                     
+},
+{
+  toJSON: {
+    virtuals: true,
+  },
 });
 
 //virtual 
 
 studentSchema.virtual('fullName' ).get(function(){
-  return this?.name?.firstName || '' + this?.name?.middleName || '' + this?.name?.lastName || ''
+  return (this?.name?.firstName|| '') + (  this?.name?.middleName || '' )+( this?.name?.lastName || '')
 }) 
 
 

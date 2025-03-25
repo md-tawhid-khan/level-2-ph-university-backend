@@ -4,9 +4,12 @@ import { Student } from './student.model';
 import appError from '../errors/appErrors';
 import status from 'http-status';
 import { User } from '../user/user.model';
+import queryBilder from '../builder/queryBilder';
+import { studentSearchableField } from './studentConstant';
 
 
 const getAllStudent = async (query:Record<string,unknown>) => {
+  /*
 
 // get all student data without query  
   if(Object.keys(query).length===0){
@@ -26,7 +29,7 @@ const getAllStudent = async (query:Record<string,unknown>) => {
   // {presentAddress:{$regex:query.searchTerm,$option:'i'}}
 
  
-  const queryObject={...query}
+  const queryObject={...query} //copy query
 
  
    const studentSearchableField=['email','name.firstName','presentAddress'] ;
@@ -106,6 +109,19 @@ const getAllStudent = async (query:Record<string,unknown>) => {
   const fieldQuery=await limitQuery.select(fields)
 
      return fieldQuery
+     */
+
+     const studentQuery=new queryBilder(
+      Student.find().populate('admissionSemester').populate({
+        path:'academicDepartment',
+        populate:{
+          path:'academicFaculty'
+        }
+      }).populate('user'),query).search(studentSearchableField).filter().sort().paginate().fields()
+
+      const result=await studentQuery.modelQuery ;
+
+      return result
 
 };
 
