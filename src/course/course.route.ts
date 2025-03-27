@@ -10,6 +10,6 @@ router.post('/create-course',validateRequest(courseValidation.courseSchemaValida
 router.get('/',courseController.getAllCourseFromDB)
 router.get('/:courseId',courseController.getSingleCourseFromDB)
 router.delete('/:courseId',courseController.deleteSingleCourseFromDB)
-router.patch('/courseId',validateRequest(courseValidation.updateCourseSchemaValidation), courseController.updateCourseIntoDB)
+router.patch('/:courseId',validateRequest(courseValidation.updateCourseSchemaValidation), courseController.updateCourseIntoDB)
 
 export const courseRouter=router ;

@@ -21,6 +21,14 @@ const getSingleCourseFromDB=async(id:string)=>{
     return result
 }
 
+const updateCourseIntoDB=async(id:string,payload:Partial<TCourse>)=>{
+   const {preRequisiteSchema,...courseRemainingData}=payload ;
+
+   // step 1 :basic course info  update 
+   const updateBasicInfoCourse=await courseModel.findByIdAndUpdate(id,courseRemainingData,{new:true,runValidators:true}) 
+   return updateBasicInfoCourse
+}
+
 const deleteSingleCourseFromDB=async(id:string)=>{
     const result=await courseModel.findByIdAndUpdate(id,{isDelete:true})
     return result
@@ -30,5 +38,6 @@ export const courseService={
     createCourseIntoDB,
     getAllCourseFromDB,
     getSingleCourseFromDB,
+    updateCourseIntoDB,
     deleteSingleCourseFromDB
 }
