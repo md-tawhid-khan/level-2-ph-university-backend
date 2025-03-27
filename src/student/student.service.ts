@@ -126,7 +126,7 @@ const getAllStudent = async (query:Record<string,unknown>) => {
 };
 
 const getSingleStudent = async (id: string) => {
-  const result = await Student.findOne({id}).populate('admissionSemester').populate({
+  const result = await Student.findById(id).populate('admissionSemester').populate({
     path:'academicDepartment',
     populate:{
       path:'academicFaculty'
@@ -161,8 +161,9 @@ const updateStudent = async (id: string, data:Partial<TStudent>) => {
     }
   }
 
-  const result = await Student.findOneAndUpdate({id}, modifiedUpdateData, { new: true,runValidators:true }); 
+  const result = await Student.findByIdAndUpdate({id}, modifiedUpdateData, { new: true,runValidators:true }); 
   return result;
+
 };
 
 const deleteStudent = async (id: string) => {
@@ -170,13 +171,13 @@ const deleteStudent = async (id: string) => {
   try {
     session.startTransaction()
 
-    const deleteStudent = await Student.findOneAndUpdate({id},{isDeleted:true} ,{ new: true,session});
+    const deleteStudent = await Student.findByIdAndUpdate({id},{isDeleted:true} ,{ new: true,session});
 
     if(!deleteStudent){
       throw new appError(status.BAD_REQUEST,"failed to delete student data")
     }
 
-    const deleteUser= await User.findOneAndUpdate({id},{isDeleted:true},{new:true,session})
+    const deleteUser= await User.findByIdAndUpdate({id},{isDeleted:true},{new:true,session})
    
     if(!deleteUser){
       throw new appError(status.BAD_REQUEST,"failed to delete user data")
