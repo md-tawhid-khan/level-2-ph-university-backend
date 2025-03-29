@@ -11,7 +11,8 @@ export type TCourse={
     code:number,
     credits:number,
     isDelete:boolean,
-    preRequisiteCourse:[]
+    preRequisiteCourse:[TPreRequisiteCoures]
     createdAt:Date,
     updatedAt:Date
 }
+

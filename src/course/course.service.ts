@@ -22,10 +22,24 @@ const getSingleCourseFromDB=async(id:string)=>{
 }
 
 const updateCourseIntoDB=async(id:string,payload:Partial<TCourse>)=>{
-   const {preRequisiteSchema,...courseRemainingData}=payload ;
+   const {preRequisiteCourse,...courseRemainingData}=payload ;
 
    // step 1 :basic course info  update 
    const updateBasicInfoCourse=await courseModel.findByIdAndUpdate(id,courseRemainingData,{new:true,runValidators:true}) 
+
+   // check if there  is any pre requisite course to updata
+ 
+   if(preRequisiteCourse && preRequisiteCourse.length>0){
+           
+           // filter out the deleted field  
+        const deletedPreRequisites=preRequisiteCourse.filter(el=>el.course && el.isDelete).map(el=>el.course)
+        
+        const deletedPreRequisitesCourse=await courseModel.findByIdAndUpdate(id,{
+            $pull:{preRequisiteCourse:{course:{$in:deletedPreRequisites}}}
+        },{new:true})
+   }
+
+
    return updateBasicInfoCourse
 }
 
