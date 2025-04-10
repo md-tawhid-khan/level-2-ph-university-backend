@@ -9,6 +9,7 @@ const router=Router()
 router.post('/create-course',validateRequest(courseValidation.courseSchemaValidation),courseController.createCourseIntoDB)
 router.get('/',courseController.getAllCourseFromDB)
 router.get('/:courseId',courseController.getSingleCourseFromDB)
+router.put('/:courseId/assign-faculties',validateRequest(courseValidation.facultiesWithCourseValidationSchema), courseController.assignFacultiesWithCourseIntoDB)
 router.delete('/:courseId',courseController.deleteSingleCourseFromDB)
 router.patch('/:courseId',validateRequest(courseValidation.updateCourseSchemaValidation), courseController.updateCourseIntoDB)
 

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {  z } from "zod";
 
 const preRequisiteSchemaValidation=z.object({
     course:z.string().optional(),
@@ -35,9 +35,15 @@ const updateCourseSchemaValidation=z.object({
     })
 })
 
+const facultiesWithCourseValidationSchema = z.object({
+    body: z.object({
+      faculties: z.array(z.string()),
+    }),
+  });
 
 
 export const courseValidation={
     courseSchemaValidation ,
-    updateCourseSchemaValidation
+    updateCourseSchemaValidation,
+    facultiesWithCourseValidationSchema
 }

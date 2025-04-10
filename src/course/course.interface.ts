@@ -5,6 +5,7 @@ export type TPreRequisiteCoures={
     isDelete:boolean
 }
 
+
 export type TCourse={
     title:string,
     prefix:string,
@@ -15,4 +16,9 @@ export type TCourse={
     createdAt:Date,
     updatedAt:Date
 }
+
+export type TCoursefaculty = {
+    course: Types.ObjectId;
+    faculties: [Types.ObjectId];
+  };
 
