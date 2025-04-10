@@ -71,12 +71,25 @@ const assignFacultiesWithCourseIntoDB=catchAsync(async(req,res)=>{
     })
 }) ;
 
+const removeFacultiesWithCourseIntoDB=catchAsync(async(req,res)=>{
+    const id=req.params.courseId ;
+    const faculities =req.body ;
+    const result=await courseService.removeFacultiesWithCourseIntoDB(id,faculities)
+    sendResponse(res,{
+        statusCode:status.OK,
+        success:true,
+        message:'successfully assign course data',
+        data:result
+    })
+}) ;
+
 export const  courseController={
     createCourseIntoDB,
     getAllCourseFromDB,
     getSingleCourseFromDB,
     updateCourseIntoDB,
     deleteSingleCourseFromDB,
-    assignFacultiesWithCourseIntoDB
+    assignFacultiesWithCourseIntoDB,
+    removeFacultiesWithCourseIntoDB
 }
 
