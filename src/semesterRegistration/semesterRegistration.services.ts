@@ -8,6 +8,15 @@ import queryBilder from '../builder/queryBilder';
 const createSemseterRegistration=async(payload:TSemesterRegistration)=>{
 const academicSemester=payload.academicSemester;
 
+//check if there any registred semester that is "ongoing" | "upcoming"
+
+const isThereAnyUpcomingOrOngoingSemester=await SemesterRegistration.findOne({
+    $or:[{status:'UPCOMING'},{status:'ONGOING'}],
+})
+if(isThereAnyUpcomingOrOngoingSemester){
+    throw new appError(status.BAD_REQUEST,`there is already a ${isThereAnyUpcomingOrOngoingSemester.status} registred semester`)
+}
+
 // check if do not exist academic semester 
 
 const isAcademicSemesterExists=await AcademicSemester.findById(academicSemester)
@@ -40,9 +49,14 @@ const result=await SemesterRegistration.findById(id).populate('academicSemester'
 return result
 }
 
+const updateSemesterRegistration=async(id:string,payload)=>{
+
+}
+
 
 export const SemesterRegistrationServices={
     createSemseterRegistration,
     getAllSemesterRegistration,
-    getSingleSemesterRegistration
+    getSingleSemesterRegistration,
+    updateSemesterRegistration
 }

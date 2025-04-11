@@ -11,4 +11,6 @@ router.get('/',semesterRegistrationController.getAllSemesterRegistration)
 
 router.get('/:semesterRegistrationId',semesterRegistrationController.getSingleSemesterRegistration) 
 
+router.patch('/:semesterRegistrationId',validateRequest(semesterRegistrationValidation.updateSemesterRegistrationValidation), semesterRegistrationController.updateSemesterRegistration)
+
 export const semesterRegistrationRouter=router ;
