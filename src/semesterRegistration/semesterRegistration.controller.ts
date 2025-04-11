@@ -15,6 +15,17 @@ const createSemseterRegistration=catchAsync(async(req,res)=>{
     })
 })
 
+
+const getAllSemesterRegistration=catchAsync(async(req,res)=>{
+    const result=await SemesterRegistrationServices.getAllSemesterRegistration(req.query)
+    sendResponse(res,{
+        statusCode:status.OK,
+        success:true,
+        message:' semester registration retrived successfully',
+        data:result
+    })
+})
 export const semesterRegistrationController={
-    createSemseterRegistration
+    createSemseterRegistration,
+    getAllSemesterRegistration
 }

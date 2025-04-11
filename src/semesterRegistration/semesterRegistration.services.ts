@@ -3,6 +3,7 @@ import AcademicSemester from '../academicSemester/academicSemester.model';
 import appError from '../errors/appErrors';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
+import queryBilder from '../builder/queryBilder';
 
 const createSemseterRegistration=async(payload:TSemesterRegistration)=>{
 const academicSemester=payload.academicSemester;
@@ -27,8 +28,15 @@ return result
 
 }
 
+const getAllSemesterRegistration=async(query:Record<string , unknown>)=>{
+    const semesterRegistration=new queryBilder(SemesterRegistration.find().populate('academicSemester'),query).fields().filter().paginate().sort()
+
+const result=await semesterRegistration.modelQuery 
+return result
+}
 
 
 export const SemesterRegistrationServices={
-    createSemseterRegistration
+    createSemseterRegistration,
+    getAllSemesterRegistration
 }

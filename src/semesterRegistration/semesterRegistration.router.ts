@@ -7,4 +7,6 @@ const router=Router()
 
 router.post('/create-semester-registration',validateRequest(semesterRegistrationValidation.createSemesterRegistrationValidation),semesterRegistrationController.createSemseterRegistration)
 
+router.get('/',semesterRegistrationController.getAllSemesterRegistration)
+
 export const semesterRegistrationRouter=router ;
