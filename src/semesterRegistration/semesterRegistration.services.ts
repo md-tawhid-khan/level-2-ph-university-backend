@@ -35,8 +35,14 @@ const result=await semesterRegistration.modelQuery
 return result
 }
 
+const getSingleSemesterRegistration=async(id:string)=>{
+const result=await SemesterRegistration.findById(id).populate('academicSemester')
+return result
+}
+
 
 export const SemesterRegistrationServices={
     createSemseterRegistration,
-    getAllSemesterRegistration
+    getAllSemesterRegistration,
+    getSingleSemesterRegistration
 }
