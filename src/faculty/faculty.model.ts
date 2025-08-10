@@ -1,0 +1,70 @@
+import { TFaculty } from './faculty.interface';
+import mongoose, { model, Schema, } from "mongoose";
+
+const facultySchema=new mongoose.Schema<TFaculty>(
+    {
+  id:{
+    type:String,
+    required:true
+  },
+user:{
+    type:Schema.Types.ObjectId,
+    required:true
+},
+name:{
+    type:String,
+    required:true
+},
+  designation:{
+    type:String,
+ required:true
+},
+  gender:{
+    type:String,
+required:true
+},
+  dateOfBirth:{
+    type:String,
+required:true
+},
+  email:{
+    type:String,
+required:true
+},
+  contactNo:{
+    type:String,
+required:true
+},
+  emergencyContactNo:{
+    type:String,
+required:true
+},
+  presentAddress:{
+    type:String,
+required:true
+},
+  permanentAddress:{
+    type:String,
+required:true
+},
+  profileImage:{
+    type:String,
+required:true
+},
+  academicFaculty:{
+    type:Schema.Types.ObjectId,
+required:true,
+ref:'AcademicFaculty'
+},
+  academicDepartment:{
+    type:Schema.Types.ObjectId,
+required:true,
+ref:'academicDepartment'
+}, 
+  isDelete:{
+    type:Boolean,
+required:true
+ }   
+})
+
+export const Faculty=model<TFaculty>('Faculty',facultySchema)

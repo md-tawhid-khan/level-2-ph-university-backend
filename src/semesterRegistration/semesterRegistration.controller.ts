@@ -16,7 +16,6 @@ const createSemseterRegistration=catchAsync(async(req,res)=>{
     })
 })
 
-
 const getAllSemesterRegistration=catchAsync(async(req,res)=>{
     const result=await SemesterRegistrationServices.getAllSemesterRegistration(req.query)
     sendResponse(res,{
