@@ -14,3 +14,11 @@ export type TOfferedCourse={
     startTime:string,
     endTime:string
 };
+
+export type TOfferCourseUpdate={
+    faculty:Types.ObjectId,
+    maxCapacity:number,
+    days:TDays[],
+    startTime:string,
+    endTime:string,
+}
