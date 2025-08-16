@@ -1,18 +1,19 @@
+import { AcademicFaculty } from './../academicFaculty/academicFaculty.model';
 
 import status from "http-status";
 import appError from "../errors/appErrors";
 import { SemesterRegistration } from "../semesterRegistration/semesterRegistration.model";
 import { TOfferedCourse } from "./offeredCourse.interface";
 import { OfferedCourse } from "./offeredCourse.model";
-import AcademicSemester from "../academicSemester/academicSemester.model";
-import { AcademicFaculty } from "../academicFaculty/academicFaculty.model";
 import { AcademicDepartment } from "../academicDepartment/academicDepartment.model";
-import { CourseFaculty, courseModel } from "../course/course.model";
+import {  courseModel } from "../course/course.model";
 import { Faculty } from "../faculty/faculty.model";
+import { hasTimeConflict } from './offeredCourse.utils';
+
 
 const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
     const {
-     semesterRegistration,academicFaculty,academicDepartment,course,faculty
+     semesterRegistration,academicFaculty,academicDepartment,course,faculty,section,days,startTime,endTime
     }=payload;
     //check if the semester registration id is exist
     const isSemesterRegistrationExist =await SemesterRegistration.findById(semesterRegistration)
@@ -21,14 +22,10 @@ const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
  }
  const academicSemester=isSemesterRegistrationExist.academicSemester ;
   
-  
-
    const isAcademicFacultyExist =await AcademicFaculty.findById(academicFaculty)
  if(!isAcademicFacultyExist){
     throw new appError(status.NOT_FOUND,'academic faculty not found')
  }
-
- 
 
    const isAcademicDepartmentExist =await AcademicDepartment.findById(academicDepartment)
  if(!isAcademicDepartmentExist){
@@ -44,8 +41,51 @@ const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
  if(!isFacultyEXist){
     throw new appError(status.NOT_FOUND,'faculty not found')
  }
-    
+
+ // check if the department is belong to the faculty
+ const isDepartmentBelongToFaculty=await AcademicDepartment.findOne({
+   _id:academicDepartment,
+   academicFaculty
+ })
+ if(!isDepartmentBelongToFaculty){
+   throw new appError(status.BAD_REQUEST,`this ${isAcademicDepartmentExist.name} is not belongs to this ${isAcademicFacultyExist.name}`)
+ }
+ 
+ // check if the same offered course same section in same registration semester exist
+
+ const isSameOfferedCourseExistsWithTheSameRegisteredSemesterWithTheSameSection=await OfferedCourse.findOne({
+   course,
+   semesterRegistration,
+   section
+ })
+ if(isSameOfferedCourseExistsWithTheSameRegisteredSemesterWithTheSameSection){
+   throw new appError(status.BAD_REQUEST,`Offered course with same section is already exist !!!!`)
+ }
+
+ // get the schedules of the faculties
+  const assignSchedules= await OfferedCourse.find({
+    semesterRegistration,
+    academicFaculty,
+     days:{$in:days}
+  }).select('days startTime endTime ')
+
+  // console.log(assignSchedules)
+
+  const newSchedules={
+    days,
+    startTime,
+    endTime
+  }
+  
+ if(hasTimeConflict(assignSchedules,newSchedules)){
+     throw new appError(status.CONFLICT,'this faculty is not available at this time , choose another time')
+ }
+
+
+ // ----------- create offered course -----------
  const result=await OfferedCourse.create({...payload,academicSemester})
+
+//  return null
  return result
 }
 
