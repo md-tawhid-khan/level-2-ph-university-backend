@@ -97,7 +97,13 @@ const getAllOfferedCourseFromDB=async()=>{
   return result
 }
 
-//update offered course
+// get single offered course ------------
+const getSingleOfferedCourseFromDB=async(id:string)=>{
+  const result = await OfferedCourse.findById(id)
+  return result
+}
+
+//update offered course ------------
 
 const updateOfferCourseIntoDB=async(id:string,payload:Pick<TOfferedCourse,'faculty'|'maxCapacity'|'days'|'startTime'|'endTime'>)=>{
 const {faculty,days,startTime,endTime}=payload;
@@ -149,5 +155,6 @@ return result
 export const offeredCourseServices={
     createOfferedCourseIntoDB,
     updateOfferCourseIntoDB,
-    getAllOfferedCourseFromDB
+    getAllOfferedCourseFromDB,
+    getSingleOfferedCourseFromDB
 }

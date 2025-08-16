@@ -7,6 +7,7 @@ const router=Router()
 router.post('/create-offered-course',validateRequest(offeredCourseValidation.createOfferedCourseValidationSchema), offeredCourseController.createOfferedCourse)
 
 router.get('/',offeredCourseController.getAllOfferedCourseFromDB)
+router.get('/:id',offeredCourseController.getSingleOfferedCourseFromDB)
 
 router.patch('/:id', validateRequest(offeredCourseValidation.updateOfferedCourseValidationSchema),offeredCourseController.updateOfferedCourseController)
 
