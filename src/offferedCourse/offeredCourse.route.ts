@@ -11,4 +11,6 @@ router.get('/:id',offeredCourseController.getSingleOfferedCourseFromDB)
 
 router.patch('/:id', validateRequest(offeredCourseValidation.updateOfferedCourseValidationSchema),offeredCourseController.updateOfferedCourseController)
 
+router.delete('/:id',offeredCourseController.deleteSpecificOfferedCourseFromDB)
+
 export const offeredCourseRouter=router

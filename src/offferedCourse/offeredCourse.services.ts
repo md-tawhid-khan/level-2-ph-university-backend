@@ -152,9 +152,29 @@ const result= await OfferedCourse.findByIdAndUpdate(id,payload,{new:true})
 return result
 }
 
+// delete specific offered course 
+
+const deleteSpecificOfferedCourseFromDB=async(id:string)=>{
+  const  isOfferedCourseExist=await OfferedCourse.findById(id)
+  if(!isOfferedCourseExist){
+    throw new appError(status.NOT_FOUND,'offered course not found')
+  }
+
+  const semesterRegistration=isOfferedCourseExist.semesterRegistration
+  const semesterRegistrationStatus=await SemesterRegistration.findById(semesterRegistration).select('status')
+
+  if(semesterRegistrationStatus?.status !== 'UPCOMING'){
+    throw new appError(status.NOT_FOUND,`offered course can not delete , because the semester ${semesterRegistrationStatus}`)
+  }
+
+  const result = await  OfferedCourse.findByIdAndDelete(id,{new:true})
+  return result
+}
+
 export const offeredCourseServices={
     createOfferedCourseIntoDB,
     updateOfferCourseIntoDB,
     getAllOfferedCourseFromDB,
-    getSingleOfferedCourseFromDB
+    getSingleOfferedCourseFromDB,
+    deleteSpecificOfferedCourseFromDB
 }
