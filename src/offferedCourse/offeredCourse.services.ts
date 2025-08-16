@@ -90,10 +90,18 @@ const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
  return result
 }
 
+// get all offered course from DB
+
+const getAllOfferedCourseFromDB=async()=>{
+  const result=await OfferedCourse.find()
+  return result
+}
+
 //update offered course
 
 const updateOfferCourseIntoDB=async(id:string,payload:Pick<TOfferedCourse,'faculty'|'maxCapacity'|'days'|'startTime'|'endTime'>)=>{
 const {faculty,days,startTime,endTime}=payload;
+
 const isOfferedCourseExist=await  OfferedCourse.findById(id)
 if(!isOfferedCourseExist){
    throw new appError(status.NOT_FOUND,'offered course not found')
@@ -140,5 +148,6 @@ return result
 
 export const offeredCourseServices={
     createOfferedCourseIntoDB,
-    updateOfferCourseIntoDB
+    updateOfferCourseIntoDB,
+    getAllOfferedCourseFromDB
 }

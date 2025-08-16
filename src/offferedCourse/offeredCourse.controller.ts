@@ -13,6 +13,17 @@ const createOfferedCourse=catchAsync(async(req:Request,res:Response)=>{
     data:result
   })
 })
+// create get all offered course from DB 
+
+const getAllOfferedCourseFromDB=catchAsync(async(req:Request,res:Response)=>{
+  const result=await offeredCourseServices.getAllOfferedCourseFromDB()
+  sendResponse(res,{
+    statusCode:status.OK,
+    success:true,
+    message:'offered course is created successfully',
+    data:result
+  })
+})
 
 // create update offered course controller 
 const updateOfferedCourseController=catchAsync(async(req:Request,res:Response)=>{
@@ -28,5 +39,6 @@ const updateOfferedCourseController=catchAsync(async(req:Request,res:Response)=>
 }) 
 export const offeredCourseController={
     createOfferedCourse,
-    updateOfferedCourseController
+    updateOfferedCourseController,
+    getAllOfferedCourseFromDB
 }
