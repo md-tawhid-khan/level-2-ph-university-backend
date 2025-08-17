@@ -5,6 +5,12 @@ const getAllFacultyFromDB=async()=>{
      return result
 }
 
+const getSingleFacultyFromDB=async(id:string)=>{
+    const result=await Faculty.findById(id)
+    return result
+}
+
 export const facultyServices={
-    getAllFacultyFromDB
+    getAllFacultyFromDB,
+    getSingleFacultyFromDB
 }

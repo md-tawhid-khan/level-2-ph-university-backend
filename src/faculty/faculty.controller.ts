@@ -14,6 +14,18 @@ const getAllFacultyFromDB=catchAsync(async(req,res)=>{
   })
 })
 
+const getSingleFacultyFromDB=catchAsync(async(req,res)=>{
+    const id=req.params.id;
+    const result=await facultyServices.getSingleFacultyFromDB(id)
+     sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'successfully get specific faculty data',
+    data: result,
+  })
+})
+
 export const facultyController={
-    getAllFacultyFromDB
+    getAllFacultyFromDB,
+    getSingleFacultyFromDB
 }
