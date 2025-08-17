@@ -52,8 +52,7 @@ const modulesRouters = [
   {
     path:'/admins',
     route:adminRouter
-  },
- 
+  }, 
 ];
 
 modulesRouters.forEach((route) => router.use(route.path, route.route));

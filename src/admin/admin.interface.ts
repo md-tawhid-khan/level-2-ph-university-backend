@@ -22,3 +22,4 @@ export type TAdmin={
   managementDepartment:Types.ObjectId
   isDelete:boolean
 }
+

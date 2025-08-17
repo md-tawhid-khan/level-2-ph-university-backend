@@ -66,5 +66,33 @@ ref:'AcademicDepartment'
     type:Boolean,
 required:true
  }   
+},
+{
+  toJSON:{
+    virtuals:true
+  }
 })
+
+adminSchema.virtual('fullName' ).get(function(){
+  return (this?.name?.firstName|| '') + (  this?.name?.middleName || '' )+( this?.name?.lastName || '')
+}) 
+
+
+// query middleware
+adminSchema.pre('find',function(next){
+  this.find({isDeleted:{$ne:true}})
+  next()
+})
+
+
+adminSchema.pre('findOne',function(next){
+  this.find({isDeleted:{$ne:true}})
+  next()
+})
+
+adminSchema.pre('aggregate',function(next){
+  this.pipeline().unshift({$match:{$isDeleted:{$ne:true}}})
+  next()
+})
+
 export const Admin=model<TAdmin>('Admin',adminSchema)
