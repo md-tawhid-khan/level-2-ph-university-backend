@@ -8,6 +8,7 @@ import { courseRouter } from '../course/course.route';
 import { semesterRegistrationRouter } from '../semesterRegistration/semesterRegistration.router';
 import { offeredCourseRouter } from '../offferedCourse/offeredCourse.route';
 import { facultyRouter } from '../faculty/faculty.router';
+import { adminRouter } from '../admin/admin.route';
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const modulesRouters = [
   {
     path:'/faculties',
     route:facultyRouter
+  },
+  {
+    path:'/admins',
+    route:adminRouter
   },
  
 ];

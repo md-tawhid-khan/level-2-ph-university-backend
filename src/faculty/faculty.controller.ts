@@ -25,6 +25,8 @@ const getSingleFacultyFromDB=catchAsync(async(req,res)=>{
   })
 })
 
+//---------------------- update faculty information ----------- 
+
 export const facultyController={
     getAllFacultyFromDB,
     getSingleFacultyFromDB
