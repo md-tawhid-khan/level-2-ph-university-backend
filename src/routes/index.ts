@@ -47,7 +47,8 @@ const modulesRouters = [
   {
     path:'/faculties',
     route:facultyRouter
-  }
+  },
+ 
 ];
 
 modulesRouters.forEach((route) => router.use(route.path, route.route));
