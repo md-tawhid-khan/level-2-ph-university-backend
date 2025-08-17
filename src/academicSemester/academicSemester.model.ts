@@ -33,7 +33,7 @@ academicSemesterSchema.pre('save', async function (next) {
 });
 
 const AcademicSemester = model<TAcademicSemester>(
-  'academicSemester',
+  'AcademicSemester',
   academicSemesterSchema,
 );
 export default AcademicSemester;

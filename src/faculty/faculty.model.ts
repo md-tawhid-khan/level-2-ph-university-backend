@@ -1,5 +1,12 @@
+
 import { TFaculty } from './faculty.interface';
 import mongoose, { model, Schema, } from "mongoose";
+
+const nameSchema = new Schema({
+  firstName: { type: String },
+  middleName: { type: String },
+  lastName: { type: String },
+});
 
 const facultySchema=new mongoose.Schema<TFaculty>(
     {
@@ -9,11 +16,11 @@ const facultySchema=new mongoose.Schema<TFaculty>(
   },
 user:{
     type:Schema.Types.ObjectId,
-    required:true
+    required:true,
+    ref:'User'
 },
 name:{
-    type:String,
-    required:true
+     type: nameSchema 
 },
   designation:{
     type:String,

@@ -8,6 +8,8 @@ const createStudent: RequestHandler = catchAsync(async (req, res) => {
   // try {
   const { password, student: studentData } = req.body;
 
+  
+
   const result = await userServices.createStudentIntoDB(password, studentData);
   // res.json({
   //    status:true,
@@ -31,6 +33,19 @@ const createStudent: RequestHandler = catchAsync(async (req, res) => {
   // }
 });
 
+
+const createFaculty:RequestHandler=catchAsync(async(req,res)=>{
+  const {password,faculty:facultyData}=req.body;
+
+  const result=await userServices.createFacultyIntoDB(password,facultyData)
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'faculty is retrived successfully',
+    data: result,
+  });
+})
 export const userController = {
   createStudent,
+  createFaculty
 };
