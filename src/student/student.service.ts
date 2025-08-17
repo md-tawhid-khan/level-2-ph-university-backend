@@ -166,6 +166,8 @@ const updateStudent = async (id: string, data:Partial<TStudent>) => {
 
 };
 
+//------------delete student data ------------
+
 const deleteStudent = async (id: string) => {
   const session=await mongoose.startSession()
   try {

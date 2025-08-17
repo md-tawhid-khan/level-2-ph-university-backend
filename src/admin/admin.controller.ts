@@ -40,8 +40,24 @@ const updateAdminIntoDB: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+//--------------- delete admin from DB ----------
+
+const deleteAdmin: RequestHandler = catchAsync(async (req, res) => {
+  const id = req.params.adminId;
+
+  const result = await adminServices.deleteAdminIntoDB(id);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'deleted admin data successfully',
+    data: result,
+  });
+});
+
+
 export const adminController={
     getAllAdminFromDB,
     getSingleAdminFromDB,
-    updateAdminIntoDB
+    updateAdminIntoDB,
+    deleteAdmin,
 }
