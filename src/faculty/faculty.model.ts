@@ -74,4 +74,26 @@ required:true
  }   
 })
 
+facultySchema.virtual('fullName' ).get(function(){
+  return (this?.name?.firstName|| '') + (  this?.name?.middleName || '' )+( this?.name?.lastName || '')
+}) 
+
+
+// query middleware
+facultySchema.pre('find',function(next){
+  this.find({isDeleted:{$ne:true}})
+  next()
+})
+
+
+facultySchema.pre('findOne',function(next){
+  this.find({isDeleted:{$ne:true}})
+  next()
+})
+
+facultySchema.pre('aggregate',function(next){
+  this.pipeline().unshift({$match:{$isDeleted:{$ne:true}}})
+  next()
+})
+
 export const Faculty=model<TFaculty>('Faculty',facultySchema)

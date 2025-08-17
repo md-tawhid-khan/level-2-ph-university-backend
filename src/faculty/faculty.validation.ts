@@ -31,6 +31,37 @@ const createFacultyValidationSchema=z.object({
           isDelete:z.boolean()
     })
 })
+//--------------update faculty validation ----------
+const updateUserNameValidation = z.object({
+  firstName: z
+    .string()
+    .min(1)
+    .max(20)
+    .refine((value) => /^[A-Z]/.test(value), {
+      message: 'First Name must start with a capital letter',
+    }),
+  middleName: z.string(),
+  lastName: z.string(),
+}).optional()
+
+const updateFacultyValidationSchema=z.object({
+    body:z.object({
+                  
+          name:updateUserNameValidation,
+          designation:z.string().optional(),
+          gender:z.string().optional(),
+          dateOfBirth:z.string().optional(),
+          email:z.string().optional(),
+          contactNo:z.string().optional(),
+          emergencyContactNo:z.string().optional(),
+          presentAddress:z.string().optional(),
+          profileImage:z.string().optional(),
+          academicFaculty:z.string().optional(),
+          academicDepartment:z.string().optional(),
+          isDelete:z.boolean().optional()
+    })
+})
 export const facultyValidation={
-    createFacultyValidationSchema
+    createFacultyValidationSchema,
+    updateFacultyValidationSchema
 }
