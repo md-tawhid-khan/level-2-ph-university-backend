@@ -12,10 +12,17 @@ router.post(
   validateRequest(userValidation.CreateUserValidationSchema),
   userController.createStudent,
 );
+
 router.post(
   '/create-user-faculty',
   validateRequest(userValidation.CreateUserValidationSchema),
   userController.createFaculty,
+);
+
+router.post(
+  '/create-user-admin',
+  validateRequest(userValidation.CreateUserValidationSchema),
+  userController.createAdmin,
 );
 
 export const userRouters = router;

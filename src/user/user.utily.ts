@@ -82,6 +82,44 @@ export const generateFacultyId = async () => {
     return finalId;
 };
 
+// work for admin
+const findLastAdminId = async () => {
+    const lastFaculty = await User.findOne(
+        {
+             role: "admin" 
+        },
+        { 
+            id: 1,
+            _id: 0
+         }
+    )
+        .sort({ createdAt: -1 })
+        .lean();
+     
+    return lastFaculty?.id;
+};
+
+export const generateAdminId = async () => {
+    let currentId = "0000";
+
+    const lastAdminId = await findLastAdminId();
+
+   
+
+    if (lastAdminId) {
+         currentId = lastAdminId.split("-")[2];
+       
+    }
+
+    const incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
+
+    const finalId = `ADM-${new Date().getFullYear()}-${incrementId}`;
+
+    // console.log(finalId);
+
+    return finalId;
+};
+
 
 
    // -----------------------------------------

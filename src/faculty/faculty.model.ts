@@ -66,7 +66,7 @@ ref:'AcademicFaculty'
   academicDepartment:{
     type:Schema.Types.ObjectId,
 required:true,
-ref:'academicDepartment'
+ref:'AcademicDepartment'
 }, 
   isDelete:{
     type:Boolean,
