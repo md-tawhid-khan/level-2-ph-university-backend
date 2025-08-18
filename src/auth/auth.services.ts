@@ -5,7 +5,7 @@ import appError from "../errors/appErrors";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
 import config from '../app/config';
-import { boolean } from "zod";
+
 
 
 const loginUser=async(paylod:TLoginUser)=>{
@@ -35,13 +35,13 @@ if(!isPasswordMatch){
    
    // create token and sent to the client
 
-   const JwtPayload={
+   const jwtPayload={
     userId:isUserExist.id,
     role:isUserExist.role
    }
 
   const accessToken= jwt.sign({
-  JwtPayload
+  jwtPayload
 }, config.jwt_access_secret as string, { expiresIn: '10d' });
 
     return {
