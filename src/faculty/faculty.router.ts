@@ -1,12 +1,14 @@
+
 import { Router } from "express";
 import { facultyController } from "./faculty.controller";
 import { facultyValidation } from "./faculty.validation";
 import validateRequest from "../middleware/validateRequest";
+import authTokenValidation from "../middleware/authMidleware";
 
 
 const router=Router()
 
-router.get('/',facultyController.getAllFacultyFromDB)
+router.get('/',authTokenValidation(), facultyController.getAllFacultyFromDB)
 
 router.get('/:id',facultyController.getSingleFacultyFromDB)
 
