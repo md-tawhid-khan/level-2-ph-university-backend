@@ -1,10 +1,11 @@
-import { JwtPayload } from './../../node_modules/@types/jsonwebtoken/index.d';
+
 import jwt from "jsonwebtoken"
 import status from "http-status";
 import appError from "../errors/appErrors";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
 import config from '../app/config';
+import { boolean } from "zod";
 
 
 const loginUser=async(paylod:TLoginUser)=>{
@@ -31,9 +32,21 @@ if(!isPasswordMatch){
 
    //Access Granted, Send Access Token, Refresh Token
 
+   
+   // create token and sent to the client
+
+   const JwtPayload={
+    userId:isUserExist.id,
+    role:isUserExist.role
+   }
+
+  const accessToken= jwt.sign({
+  JwtPayload
+}, config.jwt_access_secret as string, { expiresIn: '10d' });
 
     return {
-     
+      accessToken,
+      needsPasswordChanges :isUserExist?.needChangePassword
     }
 }
 
