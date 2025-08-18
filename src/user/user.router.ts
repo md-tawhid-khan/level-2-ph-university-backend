@@ -4,11 +4,13 @@ import { userController } from './user.controller';
 
 import validateRequest from '../middleware/validateRequest';
 import { userValidation } from './user.validation';
+import authTokenValidation from '../middleware/authMidleware';
+import { USER_ROLE } from './user.constant';
 
 const router = Router();
 
 router.post(
-  '/create-user',
+  '/create-user-student',authTokenValidation(USER_ROLE.admin),
   validateRequest(userValidation.CreateUserValidationSchema),
   userController.createStudent,
 );

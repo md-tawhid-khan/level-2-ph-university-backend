@@ -45,6 +45,8 @@ const createStudentValidation = z.object({
   }),
 });
 
+// -----------------update student validation ------------
+
 const updatedUserNameValidation = z.object({
   firstName: z
     .string()
