@@ -112,12 +112,15 @@ const getAllStudent = async (query:Record<string,unknown>) => {
      */
 
      const studentQuery=new queryBilder(
-      Student.find().populate('admissionSemester').populate({
+      Student.find().populate('admissionSemester')
+      .populate({
         path:'academicDepartment',
         populate:{
           path:'academicFaculty'
         }
-      }).populate('user'),query).search(studentSearchableField).filter().sort().paginate().fields()
+      })
+      .populate('user'),query)
+      .search(studentSearchableField).filter().sort().paginate().fields()
 
       const result=await studentQuery.modelQuery ;
 

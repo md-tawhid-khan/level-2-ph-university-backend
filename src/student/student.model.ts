@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import { TStudent } from './student.interface';
 
 const nameSchema = new Schema({
   firstName: { type: String },
@@ -25,7 +26,7 @@ const studentSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     required: [true, 'user is required'],
-    ref: 'user',
+    ref: 'User',
   },
   name: { type: nameSchema },
   gender: { type: String, enum: ['male', 'female', 'other'] },
@@ -39,7 +40,7 @@ const studentSchema = new Schema({
   localGuardian: { type: localGuardianSchema },
   profileImage: { type: String },
   admissionSemester:{type:Schema.Types.ObjectId,
-                       ref:'academicSemester'},
+                       ref:'AcademicSemester'},
   academicDepartment: { type: Schema.Types.ObjectId,require:true,
                        ref:'academicDepartment'},
   isDeleted:{type:Boolean}                     
@@ -75,4 +76,4 @@ studentSchema.pre('aggregate',function(next){
 })
 
 
-export const Student = model('students', studentSchema);
+export const Student = model<TStudent>('students', studentSchema);
