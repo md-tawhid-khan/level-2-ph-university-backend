@@ -1,3 +1,4 @@
+import  jwt, { JwtPayload }  from 'jsonwebtoken';
 import status from "http-status";
 import appError from "../errors/appErrors";
 import { User } from "../user/user.model";
@@ -106,7 +107,58 @@ const newHashPassword=await bcrypt.hash(payload.newPassword,Number(config.bcrypt
   return result
 }
 
+const refreshToken=async(token:string)=>{
+
+  
+ //--------------------
+    
+    const decoded = jwt.verify(token, config.jwt_refresh_secret as string) as JwtPayload;
+
+    
+    const {userId:id,iat}=decoded;
+    
+
+    // console.log({decoded})
+
+    // checking if the user is exist
+
+    const isUserExist=await User.isUserExistByCustomId(id)
+    //    console.log(isUserExist)
+
+    if(!isUserExist){
+        throw new appError(status.NOT_FOUND,'do not find user in DB')
+    }
+    const isDelete=isUserExist.isDeleted 
+    if(isDelete){
+        throw new appError(status.FORBIDDEN,' user in already deleted')
+    }
+   const userStatus=isUserExist.status
+
+   if(userStatus === 'blocked'){
+       throw new appError(status.FORBIDDEN,' user is already blocked ! !')
+   }
+
+  if(isUserExist.passwordChangeAt && await User.isJWTIssuedBeforePasswordChange(isUserExist.passwordChangeAt,iat as number)){
+    throw new appError(status.UNAUTHORIZED,'you are not authorized and jwt token is created befor you change password')
+  }
+
+  const jwtPayload={
+    userId:isUserExist.id,
+    role:isUserExist.role
+   }
+
+//    console.log(jwtPayload)
+
+
+  const accessToken= createToken(jwtPayload,config.jwt_access_secret as string,config.jwt_access_expire_in as string)
+
+  return {accessToken}
+
+
+}
+
 export const authServices={
     loginUser,
-    changePassword
+    changePassword,
+    refreshToken
 }

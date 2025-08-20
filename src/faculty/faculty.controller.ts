@@ -6,7 +6,9 @@ import status from "http-status";
 import { RequestHandler } from "express";
 
 const getAllFacultyFromDB=catchAsync(async(req,res)=>{
-  console.log('test',req.user)
+  
+  console.log(req.cookies)
+
     const result=await facultyServices.getAllFacultyFromDB()
     sendResponse(res, {
     statusCode: status.OK,
