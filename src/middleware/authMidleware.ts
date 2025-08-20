@@ -45,7 +45,9 @@ const authTokenValidation = (...requiredRoles:TUser_role[]) => {
        throw new appError(status.FORBIDDEN,' user is already blocked ! !')
    }
 
-
+  if(isUserExist.passwordChangeAt && await User.isJWTIssuedBeforePasswordChange(isUserExist.passwordChangeAt,iat as number)){
+    throw new appError(status.UNAUTHORIZED,'you are not authorized and jwt token is created befor you change password')
+  }
 
 
 
