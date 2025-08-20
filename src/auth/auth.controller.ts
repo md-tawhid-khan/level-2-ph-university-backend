@@ -1,4 +1,4 @@
-import { JwtPayload } from 'jsonwebtoken';
+
 import status from "http-status";
 import catchAsync from "../utily/catchAsync";
 import sendResponse from "../utily/sendResponse";

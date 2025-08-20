@@ -5,11 +5,14 @@ import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
 import config from '../app/config';
 import bcrypt from 'bcrypt'
-import { number } from "zod";
+
 
 
 
 const loginUser=async(paylod:TLoginUser)=>{
+    
+    // checking if the user is exist
+
     const isUserExist=await User.isUserExistByCustomId(paylod?.id)
     
 //    console.log(isUserExist)
