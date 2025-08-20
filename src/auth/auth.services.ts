@@ -1,21 +1,22 @@
-import jwt from "jsonwebtoken"
 import status from "http-status";
 import appError from "../errors/appErrors";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
 import config from '../app/config';
 import bcrypt from 'bcrypt'
+import { createToken } from "./auth.utils";
 
 
 
 
-const loginUser=async(paylod:TLoginUser)=>{
+const loginUser=async(payload:TLoginUser)=>{
+   
     
     // checking if the user is exist
 
-    const isUserExist=await User.isUserExistByCustomId(paylod?.id)
+    const isUserExist=await User.isUserExistByCustomId(payload?.id)
     
-//    console.log(isUserExist)
+   
 
     if(!isUserExist){
         throw new appError(status.NOT_FOUND,'do not find user in DB')
@@ -31,7 +32,7 @@ const loginUser=async(paylod:TLoginUser)=>{
    }
 
    // check if the password is correct
-   const isPasswordMatch=await User.isPasswordMatched(paylod.password,isUserExist.password)
+   const isPasswordMatch=await User.isPasswordMatched(payload.password,isUserExist.password)
 if(!isPasswordMatch){
     throw new appError(status.NOT_FOUND,'do not matched password')
 }
@@ -46,12 +47,17 @@ if(!isPasswordMatch){
     role:isUserExist.role
    }
 
-  const accessToken= jwt.sign({
-  jwtPayload
-}, config.jwt_access_secret as string, { expiresIn: '10d' });
+//    console.log(jwtPayload)
+
+
+  const accessToken= createToken(jwtPayload,config.jwt_access_secret as string,config.jwt_access_expire_in as string)
+
+  const refreshToken= createToken(jwtPayload,config.jwt_refresh_secret as string,config.jwt_refresh_expire_in as string);
+  
 
     return {
       accessToken,
+      refreshToken,
       needsPasswordChanges :isUserExist?.needChangePassword
     }
 }
