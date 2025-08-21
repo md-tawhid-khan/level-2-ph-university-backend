@@ -48,9 +48,24 @@ const result=await authServices.refreshToken(refreshToken)
     })
 
 })
+const forgetPassword=catchAsync(async(req,res)=>{
+  
+    const userId=req.body.id;
+
+    const result=await authServices.forgetPassword(userId)
+      
+    sendResponse(res,{
+        statusCode:status.OK,
+        success:true,
+        message: ' successfully reset link generated',
+        data:result
+    })
+
+})
 
 export const authController={
     loginUser,
     changePassword,
-    refreshToken
+    refreshToken,
+    forgetPassword
 }

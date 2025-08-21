@@ -12,4 +12,6 @@ router.post('/change-password',authTokenValidation(USER_ROLE.admin,USER_ROLE.fac
 
 router.post('/refresh-token',validateRequest(authValidation.refreshTokenValidationSchema),authController.refreshToken)
 
+router.post('/forget-password',validateRequest(authValidation.forgetPasswordValidationSchema),authController.forgetPassword)
+
 export const authRouters=router
