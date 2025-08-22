@@ -6,6 +6,7 @@ import { TLoginUser } from "./auth.interface";
 import config from '../app/config';
 import bcrypt from 'bcrypt'
 import { createToken } from "./auth.utils";
+import { sendEmail } from '../utily/sendEmail';
 
 
 
@@ -186,13 +187,12 @@ const forgetPassword=async(userId:string)=>{
 //    console.log(jwtPayload)
 
 
-  const accessToken= createToken(jwtPayload,config.jwt_access_secret as string,'10m')
+  const resetToken= createToken(jwtPayload,config.jwt_access_secret as string,'10m')
 
-  
+ 
+   const resetUILink=`${config.reset_password_ui_link}?id=${isUserExist.id}&token=${resetToken}`
 
-
-
-   const resetUILink=`http://localhost:5173?id=${isUserExist.id}&token=${accessToken}`
+   sendEmail(isUserExist?.email,resetUILink)
 
    console.log(resetUILink)
 }

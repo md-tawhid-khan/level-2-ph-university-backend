@@ -5,11 +5,20 @@ import config from '../app/config';
 
 const userSchema = new Schema<TUser,UserModel>(
   {
-    id: { type: String, required: true },
+    id: {
+       type: String,
+       required: true,
+       unique:true 
+      },
     password: {
        type: String,
         required: true ,
         select:0
+      },
+      email:{
+        type:String,
+        required:true,
+        unique:true
       },
     needChangePassword: { type: Boolean, default: true },
     passwordChangeAt:{type:Date},
