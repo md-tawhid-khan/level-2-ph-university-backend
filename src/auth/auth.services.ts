@@ -92,7 +92,7 @@ const changePassword=async(userData:{userId:string ; role:string},payload:{oldPa
 if(!isPasswordMatch){
     throw new appError(status.NOT_FOUND,'do not matched old password')
 }
-
+ // create hash new password
 const newHashPassword=await bcrypt.hash(payload.newPassword,Number(config.bcrypt_salt_rounds))
 
 
@@ -107,6 +107,8 @@ const newHashPassword=await bcrypt.hash(payload.newPassword,Number(config.bcrypt
   
   return result
 }
+
+//   --------------- create refresh token ---------------
 
 const refreshToken=async(token:string)=>{
 
@@ -158,6 +160,8 @@ const refreshToken=async(token:string)=>{
 
 }
 
+// ------------------ forget password ----------------
+
 const forgetPassword=async(userId:string)=>{
 
    // checking if the user is exist
@@ -194,12 +198,55 @@ const forgetPassword=async(userId:string)=>{
 
    sendEmail(isUserExist?.email,resetUILink)
 
-   console.log(resetUILink)
+  //  console.log(resetUILink)
+}
+ // ---------------------  reset password ----------------
+const resetPassword=async(payload:{id:string,newPassword:string},token:string)=>{
+// checking if the user is exist
+
+    const isUserExist=await User.isUserExistByCustomId(payload?.id)
+    
+   
+
+    if(!isUserExist){
+        throw new appError(status.NOT_FOUND,'do not find user in DB')
+    }
+    const isDelete=isUserExist.isDeleted 
+    if(isDelete){
+        throw new appError(status.FORBIDDEN,' user in already deleted')
+    }
+   const userStatus=isUserExist.status
+
+   if(userStatus === 'blocked'){
+       throw new appError(status.FORBIDDEN,' user is already blocked ! !')
+   }
+
+   const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
+
+   if(payload?.id !== decoded.userId){
+    throw new appError(status.FORBIDDEN,'you are forbidden')
+   }
+  
+   const newHashPassword=await bcrypt.hash(payload.newPassword,Number(config.bcrypt_salt_rounds))
+
+    const result=await User.findOneAndUpdate({
+    id:decoded.userId,
+    role:decoded.role
+  },{
+    password:newHashPassword,
+    needChangePassword:false,
+    passwordChangeAt:new Date()
+  })
+
+  return result
+
+
 }
 
 export const authServices={
     loginUser,
     changePassword,
     refreshToken,
-    forgetPassword
+    forgetPassword,
+    resetPassword
 }
