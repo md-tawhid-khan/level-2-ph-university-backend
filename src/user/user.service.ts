@@ -1,4 +1,4 @@
-
+import { Admin } from './../admin/admin.model';
 import config from '../app/config';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
@@ -14,6 +14,9 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { Faculty } from '../faculty/faculty.model';
 import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
+import { verifyToken } from '../auth/auth.utils';
+import { USER_ROLE } from './user.constant';
+import notFounds from '../middleware/notFound';
 
 
 
@@ -226,9 +229,39 @@ const createAdminIntoDB=async(password:string,payload:TAdmin)=>{
 }
 
 }
+ 
+//--------- get single user by using token from DB -----------
+
+const getMe=(token:string)=>{
+ const decoded=verifyToken(token,config.jwt_access_secret as string)
+
+ if(!decoded){
+  throw new appError(status.NOT_FOUND,'Token do not found ')
+ }
+ 
+ 
+
+ let result=null
+
+ if(decoded?.role === USER_ROLE.student){
+  result = Student.findOne({id:decoded?. userId})
+ }
+
+ if(decoded?.role  === USER_ROLE.faculty){
+  result = Faculty.findOne({id:decoded?. userId})
+ }
+
+ if(decoded?.role  === USER_ROLE.admin){
+  result = Admin.findOne({id:decoded?. userId})
+ }
+
+ return result
+
+}
 
 export const userServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMe
 };

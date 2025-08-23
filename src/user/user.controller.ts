@@ -60,8 +60,23 @@ const createAdmin:RequestHandler=catchAsync(async(req,res)=>{
     data: result,
   });
 })
+
+// --------------- get single user by using token from DB -------
+const getMe:RequestHandler=catchAsync(async(req,res)=>{
+ 
+  const token=req.headers.authorization
+
+  const result=await userServices.getMe(token )
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'get me  is retrived successfully',
+    data: result,
+  });
+})
 export const userController = {
   createStudent,
   createFaculty,
-  createAdmin
+  createAdmin,
+  getMe
 };
