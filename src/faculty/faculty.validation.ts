@@ -14,8 +14,9 @@ const userNameValidation = z.object({
 
 const createFacultyValidationSchema=z.object({
     body:z.object({
-        id:z.string(),
-          user:z.string(),
+      faculty:z.object({
+        // id:z.string(),
+        //   user:z.string(),
           name:userNameValidation,
           designation:z.string(),
           gender:z.string(),
@@ -25,10 +26,11 @@ const createFacultyValidationSchema=z.object({
           emergencyContactNo:z.string(),
           presentAddress:z.string(),
           permanentAddress:z.string(),
-          profileImage:z.string(),
+          // profileImage:z.string(),
           academicFaculty:z.string(),
           academicDepartment:z.string(),
           isDelete:z.boolean()
+    })
     })
 })
 //--------------update faculty validation ----------

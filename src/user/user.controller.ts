@@ -1,3 +1,4 @@
+
 import { status } from 'http-status';
 import { RequestHandler } from 'express';
 import { userServices } from './user.service';
@@ -6,13 +7,8 @@ import catchAsync from '../utily/catchAsync';
 import { JwtPayload } from 'jsonwebtoken';
 
 const createStudent: RequestHandler = catchAsync(async (req, res) => {
-
-  
-  // console.log(req.file,'file')
-
  
-  
-
+  // console.log(req.file,'file')
 
   // try {
 
@@ -44,9 +40,16 @@ const createStudent: RequestHandler = catchAsync(async (req, res) => {
 //-------------create Faculty -------------------
 
 const createFaculty:RequestHandler=catchAsync(async(req,res)=>{
-  const {password,faculty:facultyData}=req.body;
 
-  const result=await userServices.createFacultyIntoDB(password,facultyData)
+  console.log("file",req.file)
+  
+ 
+
+  const {password,faculty:facultyData}=req.body
+
+ console.log('facultyData :',facultyData.academicFaculty,'academicDepartment :',facultyData.academicDepartment)
+ 
+  const result=await userServices.createFacultyIntoDB(req.file,password,facultyData)
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
@@ -58,9 +61,11 @@ const createFaculty:RequestHandler=catchAsync(async(req,res)=>{
 // -------------create admin with user ---------------------
 
 const createAdmin:RequestHandler=catchAsync(async(req,res)=>{
+  // console.log(req.file,'file')
+  
   const {password,admin:adminData}=req.body;
 
-  const result=await userServices.createAdminIntoDB(password,adminData)
+  const result=await userServices.createAdminIntoDB(req.file,password,adminData)
   sendResponse(res, {
     statusCode: status.OK,
     success: true,

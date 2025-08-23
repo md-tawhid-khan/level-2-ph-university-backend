@@ -58,7 +58,6 @@ const path=file?.path
  const imageData=await sendImageToCloudinary(imageName,path)
 
 
-
   //create a user (transaction-1)
   const newUser = await User.create([userData],{session}); //array
 
@@ -96,7 +95,7 @@ const path=file?.path
   
 };
 
-const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
+const createFacultyIntoDB = async (file:any,password: string, payload: TFaculty) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -127,7 +126,15 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     //set manually generated it
     userData.id=await generateFacultyId()
 
-   
+    //send image to cloudinary
+
+const imageName=`${userData.id}${payload?.name.firstName}`
+
+const path=file?.path
+
+//send image to cloudinary
+ const imageData=await sendImageToCloudinary(imageName,path)
+
 
     //create a user (transcetion-1) 
    const newUser= await User.create([userData],{session}) //array
@@ -136,11 +143,13 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
      if (!newUser.length) {
     throw new appError(status.BAD_REQUEST,"failed to create user")
   }
+
     
    //set id,_id as user 
 
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImage=imageData?.secure_url as string
 
    
 
@@ -163,6 +172,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
   }
  catch (error) {
+  console.log(error)
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create faculty")
@@ -172,7 +182,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
 // create user for Admin 
 
-const createAdminIntoDB=async(password:string,payload:TAdmin)=>{
+const createAdminIntoDB=async(file:any,password:string,payload:TAdmin)=>{
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -201,11 +211,24 @@ const createAdminIntoDB=async(password:string,payload:TAdmin)=>{
     //set manually generated it
     userData.id=await generateAdminId()
 
+    //send image to cloudinary
+
+const imageName=`${userData.id}${payload?.name.firstName}`
+
+const path=file?.path
+
+//send image to cloudinary
+ const imageData=await sendImageToCloudinary(imageName,path)
+
+//  console.log(imageData)
+
+
    
 
     //create a user (transcetion-1) 
    const newUser= await User.create([userData],{session}) //array
     
+   
    //create a faculty --------------
      if (!newUser.length) {
     throw new appError(status.BAD_REQUEST,"failed to create user")
@@ -215,6 +238,7 @@ const createAdminIntoDB=async(password:string,payload:TAdmin)=>{
 
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
+     payload.profileImage=imageData?.secure_url as string
 
    
 
@@ -237,7 +261,7 @@ const createAdminIntoDB=async(password:string,payload:TAdmin)=>{
 
   }
  catch (error) {
-  
+  // console.log(error)
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create Admin")  

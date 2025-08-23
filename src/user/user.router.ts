@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { userController } from './user.controller';
-// import { AnyZodObject } from "zod";
-
 import validateRequest from '../middleware/validateRequest';
 import { userValidation } from './user.validation';
 import authTokenValidation from '../middleware/authMidleware';
 import { USER_ROLE } from './user.constant';
 import { upload } from '../utily/sendImageToCloudinary';
 import { studentValidation } from '../student/student.validation';
+import { adminValidation } from '../admin/admin.validation';
+import { facultyValidation } from '../faculty/faculty.validation';
+
 
 
 const router = Router();
@@ -24,14 +25,24 @@ router.post(
 );
 
 router.post(
-  '/create-user-faculty',
-  validateRequest(userValidation.CreateUserValidationSchema),
-  userController.createFaculty,
-);
+  '/create-user-faculty',authTokenValidation(USER_ROLE.admin),
+  upload.single('file'),
+ (req:Request,res:Response,next:NextFunction)=>{
+  req.body=JSON.parse(req.body.data)
+  next()
+ },
+ validateRequest(facultyValidation.createFacultyValidationSchema),
+  userController.createFaculty
+)
 
 router.post(
-  '/create-user-admin',
-  validateRequest(userValidation.CreateUserValidationSchema),
+  '/create-user-admin',authTokenValidation(USER_ROLE.admin),
+  upload.single('file'),
+  (req:Request,res:Response,next:NextFunction)=>{
+    req.body=JSON.parse(req.body.data)
+    next()
+  },
+  validateRequest(adminValidation.createAdminValidation),
   userController.createAdmin,
 );
 
