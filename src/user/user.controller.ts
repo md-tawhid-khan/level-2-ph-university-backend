@@ -3,6 +3,7 @@ import { RequestHandler } from 'express';
 import { userServices } from './user.service';
 import sendResponse from '../utily/sendResponse';
 import catchAsync from '../utily/catchAsync';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createStudent: RequestHandler = catchAsync(async (req, res) => {
   // try {
@@ -61,12 +62,29 @@ const createAdmin:RequestHandler=catchAsync(async(req,res)=>{
   });
 })
 
+//----------------change status --------------------
+
+const changeStatus:RequestHandler=catchAsync(async(req,res)=>{
+
+  const id=req.params.id;
+ const payload=req.body
+ const  result= await userServices.changeStatus(id,payload)
+  
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'userStatus is updated  successfully',
+    data: result,
+  });
+})
+
 // --------------- get single user by using token from DB -------
 const getMe:RequestHandler=catchAsync(async(req,res)=>{
  
-  const token=req.headers.authorization
+ const {userId,role}=req.user as JwtPayload;
 
-  const result=await userServices.getMe(token )
+
+  const result=await userServices.getMe(userId,role)
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
@@ -78,5 +96,7 @@ export const userController = {
   createStudent,
   createFaculty,
   createAdmin,
+  changeStatus,
   getMe
+
 };

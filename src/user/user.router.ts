@@ -7,6 +7,7 @@ import { userValidation } from './user.validation';
 import authTokenValidation from '../middleware/authMidleware';
 import { USER_ROLE } from './user.constant';
 
+
 const router = Router();
 
 router.post(
@@ -27,8 +28,14 @@ router.post(
   userController.createAdmin,
 );
 
+router.post(
+  '/change-status/:id',authTokenValidation(USER_ROLE.admin),
+  validateRequest(userValidation.changeStatusValidationSchema),
+  userController.changeStatus,
+);
+
 router.get(
-  '/me',
+  '/me', authTokenValidation(USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.student),
   userController.getMe,
 );
 

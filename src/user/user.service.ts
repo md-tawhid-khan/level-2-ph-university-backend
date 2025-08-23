@@ -229,30 +229,31 @@ const createAdminIntoDB=async(password:string,payload:TAdmin)=>{
 }
 
 }
+
+//---------------change user's status -----------------
+const changeStatus=async(id : string,payload:{status:string})=>{
+
+  const result=await User.findByIdAndUpdate(id,payload,{new:true})
+
+ return result
+}
  
 //--------- get single user by using token from DB -----------
 
-const getMe=(token:string)=>{
- const decoded=verifyToken(token,config.jwt_access_secret as string)
-
- if(!decoded){
-  throw new appError(status.NOT_FOUND,'Token do not found ')
- }
- 
- 
+const getMe=(userId:string,role:string)=>{
 
  let result=null
 
- if(decoded?.role === USER_ROLE.student){
-  result = Student.findOne({id:decoded?. userId})
+ if(role === USER_ROLE.student){
+  result = Student.findOne({id: userId}).populate('user')
  }
 
- if(decoded?.role  === USER_ROLE.faculty){
-  result = Faculty.findOne({id:decoded?. userId})
+ if(role  === USER_ROLE.faculty){
+  result = Faculty.findOne({id: userId}).populate('user')
  }
 
- if(decoded?.role  === USER_ROLE.admin){
-  result = Admin.findOne({id:decoded?. userId})
+ if(role  === USER_ROLE.admin){
+  result = Admin.findOne({id:userId}).populate('user')
  }
 
  return result
@@ -263,5 +264,6 @@ export const userServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  changeStatus,
   getMe
 };

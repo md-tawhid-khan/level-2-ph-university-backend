@@ -1,11 +1,11 @@
-import  jwt, { JwtPayload }  from 'jsonwebtoken';
+
 import status from "http-status";
 import appError from "../errors/appErrors";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
 import config from '../app/config';
 import bcrypt from 'bcrypt'
-import { createToken } from "./auth.utils";
+import { createToken, verifyToken } from "./auth.utils";
 import { sendEmail } from '../utily/sendEmail';
 
 
@@ -114,8 +114,10 @@ const refreshToken=async(token:string)=>{
 
   
  //--------------------
-    
-    const decoded = jwt.verify(token, config.jwt_refresh_secret as string) as JwtPayload;
+  
+
+    const decoded =verifyToken(token,config.jwt_refresh_secret as string)
+  
 
     
     const {userId:id,iat}=decoded;
@@ -221,7 +223,8 @@ const resetPassword=async(payload:{id:string,newPassword:string},token:string)=>
        throw new appError(status.FORBIDDEN,' user is already blocked ! !')
    }
 
-   const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
+   const decoded = verifyToken(token,config.jwt_access_secret as string )
+   
 
    if(payload?.id !== decoded.userId){
     throw new appError(status.FORBIDDEN,'you are forbidden')
