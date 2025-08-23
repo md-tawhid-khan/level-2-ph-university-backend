@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Admin } from './../admin/admin.model';
 import config from '../app/config';
 import { TStudent } from '../student/student.interface';
@@ -13,14 +14,14 @@ import { TFaculty } from '../faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Faculty } from '../faculty/faculty.model';
 import { TAdmin } from '../admin/admin.interface';
-import { Admin } from '../admin/admin.model';
-import { verifyToken } from '../auth/auth.utils';
 import { USER_ROLE } from './user.constant';
-import notFounds from '../middleware/notFound';
+import { sendImageToCloudinary } from '../utily/sendImageToCloudinary';
 
 
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+
+
+const createStudentIntoDB = async (file:any,password: string, payload: TStudent) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -47,6 +48,16 @@ try {
   // set manually generated it
   
   userData.id =await generateStudentId(admissionSemester)
+//send image to cloudinary
+
+const imageName=`${userData.id}${payload?.name.firstName}`
+
+const path=file?.path
+
+//send image to cloudinary
+ const imageData=await sendImageToCloudinary(imageName,path)
+
+
 
   //create a user (transaction-1)
   const newUser = await User.create([userData],{session}); //array
@@ -59,6 +70,9 @@ try {
 
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImage=imageData?.secure_url as string
+
+    
 
   // create a student (transaction-2)
     const newStudent = await Student.create(payload);
@@ -72,6 +86,7 @@ try {
     return newStudent;
   
 } catch (error) {
+  
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create student")

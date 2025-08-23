@@ -38,7 +38,7 @@ const createStudentValidation = z.object({
       permanentAddress: z.string(),
       guardian: gurdianValidation,
       localGuardian: localGurdianValidation,
-      profileImage: z.string(),
+      // profileImage: z.string(),
       admissionSemester:z.string(),
       academicDepartment: z.string(),
     }),
@@ -75,6 +75,7 @@ const updatedLocalGurdianValidation = z.object({
 
 const updatedStudentValidation = z.object({
   body: z.object({
+    password:z.string().max(20).optional(),
     student: z.object({
       name: updatedUserNameValidation,
       gender: z.enum(['male', 'female', 'other']).optional(),

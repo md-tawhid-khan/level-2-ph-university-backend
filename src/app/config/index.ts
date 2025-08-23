@@ -13,5 +13,8 @@ export default {
   jwt_refresh_secret:process.env.JWT_REFRESH_SECRET,
   jwt_access_expire_in:process.env.JWT_ACCESS_EXPIRED_IN,
   jwt_refresh_expire_in:process.env.JWT_REFRESFH_EXPIRED_IN,
-  reset_password_ui_link:process.env.RESET_PASSWORD_UI_LINK
+  reset_password_ui_link:process.env.RESET_PASSWORD_UI_LINK,
+  cloudy_name:process.env.CLOUDY_NAME,
+  cloudy_api_key:process.env.CLOUDY_API_KEY,
+  cloudy_secret:process.env.CLOUDY_SECRET
 };

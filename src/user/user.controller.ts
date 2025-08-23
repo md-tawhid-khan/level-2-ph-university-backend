@@ -6,12 +6,19 @@ import catchAsync from '../utily/catchAsync';
 import { JwtPayload } from 'jsonwebtoken';
 
 const createStudent: RequestHandler = catchAsync(async (req, res) => {
-  // try {
-  const { password, student: studentData } = req.body;
 
   
+  // console.log(req.file,'file')
 
-  const result = await userServices.createStudentIntoDB(password, studentData);
+ 
+  
+
+
+  // try {
+
+  const { password, student: studentData } = req.body;
+  const result = await userServices.createStudentIntoDB(req.file,password, studentData);
+
   // res.json({
   //    status:true,
   //    message:'successfully create user',
