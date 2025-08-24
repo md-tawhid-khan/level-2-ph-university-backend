@@ -41,14 +41,10 @@ const createStudent: RequestHandler = catchAsync(async (req, res) => {
 
 const createFaculty:RequestHandler=catchAsync(async(req,res)=>{
 
-  console.log("file",req.file)
-  
+  // console.log("file",req.file)
  
-
   const {password,faculty:facultyData}=req.body
 
- console.log('facultyData :',facultyData.academicFaculty,'academicDepartment :',facultyData.academicDepartment)
- 
   const result=await userServices.createFacultyIntoDB(req.file,password,facultyData)
   sendResponse(res, {
     statusCode: status.OK,
