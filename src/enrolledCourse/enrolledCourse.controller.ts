@@ -2,12 +2,13 @@ import status from "http-status"
 import catchAsync from "../utily/catchAsync"
 import sendResponse from "../utily/sendResponse"
 import { enrolledCourseServices } from "./enrolledCourse.services"
+import { JwtPayload } from "jsonwebtoken"
 
 const createEnrolledCourseIntoDB=catchAsync(async(req,res)=>{
 
   // console.log(req.user)
   // console.log(req.body)
-  const {userId}=req.user
+  const {userId }=req.user as JwtPayload
 
     const result=await enrolledCourseServices.createEnrolledCourseIntoDB(userId,req.body)
 

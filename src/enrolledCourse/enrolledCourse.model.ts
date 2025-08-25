@@ -75,7 +75,8 @@ isEnrolled:{
     },
 courseMarks:{
     type:courseMarks,
-    required:true
+    required:true,
+    default:()=>({})
 }  ,
 grade:{
     type:String,
