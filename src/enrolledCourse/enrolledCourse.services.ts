@@ -6,6 +6,7 @@ import { Student } from "../student/student.model"
 import { EnrolledCourse } from "./enrolledCourse.model"
 import mongoose from "mongoose"
 import { SemesterRegistration } from "../semesterRegistration/semesterRegistration.model"
+import {  courseModel } from "../course/course.model"
 
 const createEnrolledCourseIntoDB=async(userId:string,payload:TEnrolledCourse)=>{
 /**
@@ -42,12 +43,15 @@ const {offeredCourse}=payload ;
 
  // check total credits exceeds maxCredits
 
+ const course=await courseModel.findById(isOfferedCourseExists.course)
+ const currentCredit=course?.credits
+
  const semesterRegistration= await SemesterRegistration.findById(isOfferedCourseExists.semesterRegistration).select('maxCredit')
+ const maxCredits=semesterRegistration?.maxCredit
+
 //  console.log({semesterRegistration})
 
- // total enrolled credit + new enroled course  credit >maxCredit
-
-
+ 
  const enrolledCourses=await EnrolledCourse.aggregate([
     {$match:{
         semesterRegistration:new mongoose.Types.ObjectId(isOfferedCourseExists.semesterRegistration),
@@ -68,63 +72,69 @@ const {offeredCourse}=payload ;
  {
     $group:{
         _id:null,
-        "totalEnrolledCredites":{$sum:'$enrolledCoursesData.credits'}
+        "totalEnrolledCredits":{$sum:'$enrolledCoursesData.credits'}
     }
 },
 {
     $project:{
         _id:0,
-        totalEnrolledCredites:1
+        totalEnrolledCredits:1
     }
 }
 
  ])
- console.log({enrolledCourses})
+//  console.log({enrolledCourses})
+
+ // total enrolled credit + new enroled course  credit >maxCredit
+ const totalCredits=enrolledCourses.length> 0 ? enrolledCourses[0].totalEnrolledCredits:0 ;
+
+ if(totalCredits && currentCredit && maxCredits && totalCredits + currentCredit > maxCredits){
+    throw new appError(status.BAD_REQUEST,'You have exceeded total number of credits')
+ }
 
 
-
-//  const session=await mongoose.startSession()
+ const session=await mongoose.startSession()
   
  
-//    try{
-//      session.startTransaction()
+   try{
+     session.startTransaction()
      
  
-//  const result=await EnrolledCourse.create(
-//     {
-//     offeredCourse:payload.offeredCourse,
-//      semesterRegistration:isOfferedCourseExists.semesterRegistration,
-//      academicSemester:isOfferedCourseExists.academicSemester,
-//      academicFaculty:isOfferedCourseExists.academicFaculty,
-//      academicDepartment:isOfferedCourseExists.academicDepartment,
-//      course:isOfferedCourseExists.course,
-//      faculty:isOfferedCourseExists.faculty,
-//      student:student._id,
-//      isEnrolled:true,    
-//  }
-// )
-// if(!result){
-//     throw new appError(status.BAD_REQUEST,'failde to enroll in the course')
-// }
+ const result=await EnrolledCourse.create(
+    {
+    offeredCourse:payload.offeredCourse,
+     semesterRegistration:isOfferedCourseExists.semesterRegistration,
+     academicSemester:isOfferedCourseExists.academicSemester,
+     academicFaculty:isOfferedCourseExists.academicFaculty,
+     academicDepartment:isOfferedCourseExists.academicDepartment,
+     course:isOfferedCourseExists.course,
+     faculty:isOfferedCourseExists.faculty,
+     student:student._id,
+     isEnrolled:true,    
+ }
+)
+if(!result){
+    throw new appError(status.BAD_REQUEST,'failde to enroll in the course')
+}
 
-// const maxCapacity=isOfferedCourseExists.maxCapacity
-// await OfferedCourse.findByIdAndUpdate(offeredCourse,{
-//     maxCapacity:maxCapacity-1
-// })
+const maxCapacity=isOfferedCourseExists.maxCapacity
+await OfferedCourse.findByIdAndUpdate(offeredCourse,{
+    maxCapacity:maxCapacity-1
+})
 
-//     await session.commitTransaction()
-//     await session.endSession()
+    await session.commitTransaction()
+    await session.endSession()
 
-//    return result
+   return result
    
-// }
-// catch (error) {
-//   console.log(error)
-//   await session.abortTransaction()
-//   await session.endSession()
-//   throw new Error("failed to create faculty")
+}
+catch (error) {
+  console.log(error)
+  await session.abortTransaction()
+  await session.endSession()
+  throw new Error("failed to create faculty")
   
-// }
+}
 }
 
 export const enrolledCourseServices={
