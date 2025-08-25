@@ -52,9 +52,35 @@ const {offeredCourse}=payload ;
     {$match:{
         semesterRegistration:new mongoose.Types.ObjectId(isOfferedCourseExists.semesterRegistration),
         student:new mongoose.Types.ObjectId(student._id)
-    }}
+    }
+},
+{
+    $lookup:{
+        from:'courses',
+        localField:'course',
+        foreignField:'_id',
+        as:'enrolledCoursesData'
+    }
+},
+{
+    $unwind:'$enrolledCoursesData'
+},
+ {
+    $group:{
+        _id:null,
+        "totalEnrolledCredites":{$sum:'$enrolledCoursesData.credits'}
+    }
+},
+{
+    $project:{
+        _id:0,
+        totalEnrolledCredites:1
+    }
+}
+
  ])
  console.log({enrolledCourses})
+
 
 
 //  const session=await mongoose.startSession()
