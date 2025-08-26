@@ -41,6 +41,18 @@ const createStudentIntoDB = async (file:any,password: string, payload: TStudent)
     throw new appError(404,"admission semester not found");
   }
 
+  // find academic Department
+
+  const academicDepartment = await AcademicDepartment.findById(payload.academicDepartment)
+
+  if(!academicDepartment){
+    throw new appError(404,"academic department not found");
+  }
+// console.log({academicDepartment})
+
+payload.academicFaculty=academicDepartment.academicFaculty
+
+
   const session=await mongoose.startSession()
 
 try {
@@ -48,14 +60,19 @@ try {
   // set manually generated it
   
   userData.id =await generateStudentId(admissionSemester)
-//send image to cloudinary
 
+  if(file){
+
+    //send image to cloudinary
 const imageName=`${userData.id}${payload?.name.firstName}`
 
 const path=file?.path
 
 //send image to cloudinary
  const imageData=await sendImageToCloudinary(imageName,path)
+ payload.profileImage=imageData?.secure_url as string
+
+  }
 
 
   //create a user (transaction-1)
@@ -69,7 +86,7 @@ const path=file?.path
 
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImage=imageData?.secure_url as string
+    
 
     
 
@@ -126,7 +143,8 @@ const createFacultyIntoDB = async (file:any,password: string, payload: TFaculty)
     //set manually generated it
     userData.id=await generateFacultyId()
 
-    //send image to cloudinary
+    if(file){
+  //send image to cloudinary
 
 const imageName=`${userData.id}${payload?.name.firstName}`
 
@@ -135,7 +153,10 @@ const path=file?.path
 //send image to cloudinary
  const imageData=await sendImageToCloudinary(imageName,path)
 
+ payload.profileImage=imageData?.secure_url as string
+    }
 
+  
     //create a user (transcetion-1) 
    const newUser= await User.create([userData],{session}) //array
     
@@ -149,7 +170,7 @@ const path=file?.path
 
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImage=imageData?.secure_url as string
+   
 
    
 
@@ -211,7 +232,8 @@ const createAdminIntoDB=async(file:any,password:string,payload:TAdmin)=>{
     //set manually generated it
     userData.id=await generateAdminId()
 
-    //send image to cloudinary
+    if(file){
+  //send image to cloudinary
 
 const imageName=`${userData.id}${payload?.name.firstName}`
 
@@ -219,12 +241,12 @@ const path=file?.path
 
 //send image to cloudinary
  const imageData=await sendImageToCloudinary(imageName,path)
-
 //  console.log(imageData)
+ payload.profileImage=imageData?.secure_url as string
+ 
+    }
 
-
-   
-
+  
     //create a user (transcetion-1) 
    const newUser= await User.create([userData],{session}) //array
     
@@ -238,7 +260,7 @@ const path=file?.path
 
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
-     payload.profileImage=imageData?.secure_url as string
+    
 
    
 

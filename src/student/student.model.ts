@@ -38,11 +38,13 @@ const studentSchema = new Schema({
   permanentAddress: { type: String },
   guardian: { type: guardianSchema },
   localGuardian: { type: localGuardianSchema },
-  profileImage: { type: String },
+  profileImage: { type: String ,default:''},
   admissionSemester:{type:Schema.Types.ObjectId,
                        ref:'AcademicSemester'},
   academicDepartment: { type: Schema.Types.ObjectId,require:true,
                        ref:'AcademicDepartment'},
+  academicFaculty : { type: Schema.Types.ObjectId,require:true,
+                       ref:'AcademicFaculty'},                
   isDeleted:{type:Boolean}                     
 },
 {

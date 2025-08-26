@@ -14,7 +14,7 @@ import { facultyValidation } from '../faculty/faculty.validation';
 const router = Router();
 
 router.post(
-  '/create-user-student',authTokenValidation(USER_ROLE.admin),
+  '/create-user-student',authTokenValidation(USER_ROLE.admin,USER_ROLE.superAdmin),
   upload.single('file'),
   (req:Request,res:Response,next:NextFunction)=>{
     req.body=JSON.parse(req.body.data)
@@ -25,7 +25,7 @@ router.post(
 );
 
 router.post(
-  '/create-user-faculty',authTokenValidation(USER_ROLE.admin),
+  '/create-user-faculty',authTokenValidation(USER_ROLE.admin,USER_ROLE.superAdmin),
   upload.single('file'),
  (req:Request,res:Response,next:NextFunction)=>{
   req.body=JSON.parse(req.body.data)
@@ -36,7 +36,7 @@ router.post(
 )
 
 router.post(
-  '/create-user-admin',authTokenValidation(USER_ROLE.admin),
+  '/create-user-admin',authTokenValidation(USER_ROLE.admin,USER_ROLE.superAdmin),
   upload.single('file'),
   (req:Request,res:Response,next:NextFunction)=>{
     req.body=JSON.parse(req.body.data)

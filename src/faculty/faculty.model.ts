@@ -55,6 +55,7 @@ required:true
 },
   profileImage:{
     type:String,
+    default:'',
 required:true
 },
   academicFaculty:{

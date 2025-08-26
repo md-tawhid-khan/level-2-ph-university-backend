@@ -38,9 +38,9 @@ const createStudentValidation = z.object({
       permanentAddress: z.string(),
       guardian: gurdianValidation,
       localGuardian: localGurdianValidation,
-      // profileImage: z.string(),
       admissionSemester:z.string(),
       academicDepartment: z.string(),
+   
     }),
   }),
 });
