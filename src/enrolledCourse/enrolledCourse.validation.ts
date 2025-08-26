@@ -15,7 +15,7 @@ const updateEnrolledCourseValidationZodSchema=z.object({
             classTest1:z.number().optional(),
             midTerm:z.number().optional(),
             classTest2:z.number().optional(),
-            finalTest:z.number().optional(),
+            finalTerm:z.number().optional(),
         })
     })
 })

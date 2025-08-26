@@ -7,7 +7,7 @@ export type  TEnrolledCourseMarks={
     classTest1:number,
     midTerm:number,
     classTest2:number,
-    finalTest:number
+    finalTerm:number
 }
 
 export type TEnrolledCourse={

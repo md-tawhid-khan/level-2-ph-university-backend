@@ -22,7 +22,7 @@ classTest2:{
     max:10,
     default:0
 },
-finalTest:{
+finalTerm:{
     type:Number,
      min:0,
     max:50,
