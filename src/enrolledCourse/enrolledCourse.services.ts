@@ -7,6 +7,7 @@ import { EnrolledCourse } from "./enrolledCourse.model"
 import mongoose from "mongoose"
 import { SemesterRegistration } from "../semesterRegistration/semesterRegistration.model"
 import {  courseModel } from "../course/course.model"
+import { Faculty } from "../faculty/faculty.model"
 
 const createEnrolledCourseIntoDB=async(userId:string,payload:TEnrolledCourse)=>{
 /**
@@ -157,9 +158,39 @@ const updateEnrolledCourseMarks=async(facultyId:string,payload:Partial<TEnrolled
         throw new appError(status.NOT_FOUND,'student do not found')
     }
 
+    const faculty  =await Faculty.findOne({id:facultyId},{_id:1}) 
+    
+    
 
- const result=await EnrolledCourse.findByIdAndUpdate()
-    return null
+    if(!faculty){
+         throw new appError(status.NOT_FOUND,'faculty does not allow to update')
+    }
+ 
+   
+
+    const isCourseBelongsToFaculty=await EnrolledCourse.findOne({
+        semesterRegistration,
+        offeredCourse,
+        student,
+        faculty:faculty?._id
+    })
+
+  if(!isCourseBelongsToFaculty){
+      throw new appError(status.FORBIDDEN,'you are forbidden')
+  }
+
+  const modifiedData:Record<string,unknown>={
+    ...courseMarks 
+  }
+
+if(courseMarks && Object.keys(courseMarks).length){
+    for(const[key,value] of Object.entries(courseMarks)) {
+          modifiedData[`courseMarks.${key}`]=value ;
+    }
+}
+
+ const result=await EnrolledCourse.findByIdAndUpdate(isCourseBelongsToFaculty._id,modifiedData,{new:true})
+    return result
 }
 
 export const enrolledCourseServices={

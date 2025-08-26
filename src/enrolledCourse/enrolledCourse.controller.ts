@@ -32,7 +32,7 @@ const createEnrolledCourseIntoDB=catchAsync(async(req,res)=>{
     statusCode: status.OK,
     success: true,
     message: 'update course marks are  successful',
-    data: null, 
+    data: result, 
     
   })
 
