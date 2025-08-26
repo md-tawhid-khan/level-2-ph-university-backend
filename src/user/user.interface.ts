@@ -9,7 +9,7 @@ export interface TUser  {
   email:string;
   needChangePassword: boolean;
   passwordChangeAt?:Date;
-  role: 'admin' | 'faculty' | 'student';
+  role: 'super_admin'|'admin' | 'faculty' | 'student';
   status?: 'in-progress' | 'blocked';
   isDeleted: boolean;
 };

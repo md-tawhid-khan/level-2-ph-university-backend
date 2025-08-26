@@ -16,5 +16,6 @@ export default {
   reset_password_ui_link:process.env.RESET_PASSWORD_UI_LINK,
   cloudy_name:process.env.CLOUDY_NAME,
   cloudy_api_key:process.env.CLOUDY_API_KEY,
-  cloudy_secret:process.env.CLOUDY_SECRET
+  cloudy_secret:process.env.CLOUDY_SECRET,
+  super_admin_password:process.env.SUPER_ADMIN_PASSWORD
 };
