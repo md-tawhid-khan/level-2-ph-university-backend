@@ -122,10 +122,14 @@ const getAllStudent = async (query:Record<string,unknown>) => {
       .populate('user'),query)
       .search(studentSearchableField).filter().sort().paginate().fields()
 
+      
       const result=await studentQuery.modelQuery ;
+      const meta= await studentQuery.countTotal()
 
-      return result
-
+      return {
+        meta,
+        result
+}
 };
 
 const getSingleStudent = async (id: string) => {

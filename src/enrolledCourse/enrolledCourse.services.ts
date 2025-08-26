@@ -1,3 +1,4 @@
+import { grade } from './enrolledCourse.constant';
 import status from "http-status"
 import appError from "../errors/appErrors"
 import { OfferedCourse } from "../offferedCourse/offeredCourse.model"
@@ -8,6 +9,7 @@ import mongoose from "mongoose"
 import { SemesterRegistration } from "../semesterRegistration/semesterRegistration.model"
 import {  courseModel } from "../course/course.model"
 import { Faculty } from "../faculty/faculty.model"
+import { calculateGradeAndPoints } from "./enrolledCourse.utils"
 
 const createEnrolledCourseIntoDB=async(userId:string,payload:TEnrolledCourse)=>{
 /**
@@ -187,7 +189,11 @@ const updateEnrolledCourseMarks=async(facultyId:string,payload:Partial<TEnrolled
      const {classTest1,midTerm,classTest2,finalTerm}=isCourseBelongsToFaculty.courseMarks ;
      const totalMarks = Math.ceil(classTest1*0.10) + Math.ceil(midTerm*0.30) + Math.ceil(classTest2*0.10) + Math.ceil(finalTerm*0.50)
 
-     console.log(totalMarks)
+     const result= calculateGradeAndPoints(totalMarks)
+
+     modifiedData.grade=result.grade;
+     modifiedData.gradePoints=result.gradePoints;
+     modifiedData.isComplete=true
   }
 
 if(courseMarks && Object.keys(courseMarks).length){

@@ -16,7 +16,11 @@ const getAllCourseFromDB=async(query:Record<string,unknown>)=>{
     const courseQuery=new queryBilder(
         courseModel.find().populate('preRequisiteCourse.course'),query).search(courseSearchableField).filter().sort().paginate().fields()
     const result=await courseQuery.modelQuery
-    return result
+    const meta=await courseQuery.countTotal()
+    return {
+      meta,
+      result,      
+         }
 }
 
 const getSingleCourseFromDB=async(id:string)=>{
