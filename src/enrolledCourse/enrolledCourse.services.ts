@@ -137,6 +137,32 @@ catch (error) {
 }
 }
 
+const updateEnrolledCourseMarks=async(facultyId:string,payload:Partial<TEnrolledCourse>)=>{
+    
+    const {semesterRegistration,offeredCourse,student,courseMarks}=payload
+
+    const isSemesterRegistrationExists=await SemesterRegistration.findById(semesterRegistration)
+
+    if(!isSemesterRegistrationExists){
+        throw new appError(status.NOT_FOUND,'semester registration is not found')
+    }
+
+    const isOfferedCourseExists=await OfferedCourse.findById(offeredCourse)
+    if(!isOfferedCourseExists){
+        throw new appError(status.NOT_FOUND,'offered course is not found')
+    }
+
+    const isStudentExists=await Student.findById(student)
+    if(!isStudentExists){
+        throw new appError(status.NOT_FOUND,'student do not found')
+    }
+
+
+ const result=await EnrolledCourse.findByIdAndUpdate()
+    return null
+}
+
 export const enrolledCourseServices={
-    createEnrolledCourseIntoDB
+    createEnrolledCourseIntoDB,
+    updateEnrolledCourseMarks
 }
