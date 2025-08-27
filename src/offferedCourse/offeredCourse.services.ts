@@ -10,6 +10,9 @@ import { AcademicDepartment } from "../academicDepartment/academicDepartment.mod
 import {  courseModel } from "../course/course.model";
 import { Faculty } from "../faculty/faculty.model";
 import { hasTimeConflict } from './offeredCourse.utils';
+import { Student } from '../student/student.model';
+import queryBilder from '../builder/queryBilder';
+import { query } from 'express';
 
 
 const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
@@ -92,9 +95,33 @@ const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
 
 // get all offered course from DB
 
-const getAllOfferedCourseFromDB=async()=>{
-  const result=await OfferedCourse.find()
-  return result
+const getAllOfferedCourseFromDB=async(query:Record<string,unknown>)=>{
+  const offeredCourseQuery=new queryBilder(OfferedCourse.find(),query).filter().sort().paginate().fields()
+
+  const result=await offeredCourseQuery.modelQuery ;
+  const meta= await offeredCourseQuery.countTotal()
+  return{
+    meta,
+     result}
+}
+
+// get my offered course from DB
+const getMyOfferedCourseFromDB=async(studentId:string)=>{
+ // is student exists
+  const student=await Student.findOne({id:studentId})
+  if(!student){
+    throw new appError(status.NOT_FOUND,'student do not found')
+  }
+  
+
+  // find current on going semester 
+
+  const currentOngoingSemester=await SemesterRegistration.findOne({
+    status:"ONGOING"
+  })
+
+
+  return currentOngoingSemester
 }
 
 // get single offered course ------------
@@ -175,6 +202,7 @@ export const offeredCourseServices={
     createOfferedCourseIntoDB,
     updateOfferCourseIntoDB,
     getAllOfferedCourseFromDB,
+    getMyOfferedCourseFromDB,
     getSingleOfferedCourseFromDB,
     deleteSpecificOfferedCourseFromDB
 }
