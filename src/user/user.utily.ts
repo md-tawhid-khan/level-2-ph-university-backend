@@ -31,7 +31,6 @@ export const generateStudentId=async(payload:TAcademicSemester)=>{
     const currentSemesterCode=payload.code;
     const currentYear=payload.year;
 
-    // console.log({lastStudentId,lastStudentSemesterCode,lastStudentSemesterYear,currentSemesterCode,currentYear})
 
     if(lastStudentId && lastStudentSemesterCode === currentSemesterCode && lastStudentSemesterYear === currentYear){
         currentId=lastStudentId.substring(12)
@@ -81,7 +80,6 @@ export const generateFacultyId = async () => {
 
     const finalId = `FAC-${new Date().getFullYear()}-${incrementId}`;
 
-    // console.log(finalId);
 
     return finalId;
 };
@@ -118,8 +116,6 @@ export const generateAdminId = async () => {
     const incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
 
     const finalId = `ADM-${new Date().getFullYear()}-${incrementId}`;
-
-    // console.log(finalId);
 
     return finalId;
 };

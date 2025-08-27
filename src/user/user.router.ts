@@ -47,13 +47,13 @@ router.post(
 );
 
 router.post(
-  '/change-status/:id',authTokenValidation(USER_ROLE.admin),
+  '/change-status/:id',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin),
   validateRequest(userValidation.changeStatusValidationSchema),
   userController.changeStatus,
 );
 
 router.get(
-  '/me', authTokenValidation(USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.student),
+  '/me', authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.student),
   userController.getMe,
 );
 

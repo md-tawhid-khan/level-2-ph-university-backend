@@ -8,40 +8,21 @@ import { JwtPayload } from 'jsonwebtoken';
 
 const createStudent: RequestHandler = catchAsync(async (req, res) => {
  
-  // console.log(req.file,'file')
-
-  // try {
-
   const { password, student: studentData } = req.body;
   const result = await userServices.createStudentIntoDB(req.file,password, studentData);
 
-  // res.json({
-  //    status:true,
-  //    message:'successfully create user',
-  //    data:result
-  // })
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: 'Student is retrived successfully',
     data: result,
   });
-  //    }
-  //  catch (error) {
-  //     // res.json({
-  //     //     status:false,
-  //     //     message:'something went wrong',
-  //     //     error
-  //     // })
-  //     next(error)
-  // }
+ 
 });
 
 //-------------create Faculty -------------------
 
 const createFaculty:RequestHandler=catchAsync(async(req,res)=>{
-
-  // console.log("file",req.file)
  
   const {password,faculty:facultyData}=req.body
 
@@ -57,7 +38,6 @@ const createFaculty:RequestHandler=catchAsync(async(req,res)=>{
 // -------------create admin with user ---------------------
 
 const createAdmin:RequestHandler=catchAsync(async(req,res)=>{
-  // console.log(req.file,'file')
   
   const {password,admin:adminData}=req.body;
 

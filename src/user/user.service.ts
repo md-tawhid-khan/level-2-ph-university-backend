@@ -48,7 +48,6 @@ const createStudentIntoDB = async (file:any,password: string, payload: TStudent)
   if(!academicDepartment){
     throw new appError(404,"academic department not found");
   }
-// console.log({academicDepartment})
 
 payload.academicFaculty=academicDepartment.academicFaculty
 
@@ -74,7 +73,6 @@ const path=file?.path
 
   }
 
-
   //create a user (transaction-1)
   const newUser = await User.create([userData],{session}); //array
 
@@ -87,9 +85,6 @@ const path=file?.path
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
     
-
-    
-
   // create a student (transaction-2)
     const newStudent = await Student.create(payload);
     if(!newStudent){
@@ -124,15 +119,13 @@ const createFacultyIntoDB = async (file:any,password: string, payload: TFaculty)
   // set faculty email
   userData.email=payload?.email;
 
-  // console.log(userData)
-
    //find academic semester info
   const academicDepartment = await AcademicDepartment.findById(payload.academicDepartment)
   
   if (!academicDepartment) {
     throw new appError(404,"academic department not found");
   }
-//  console.log(academicDepartment)
+  payload.academicFaculty=academicDepartment.academicFaculty
 
   const session=await mongoose.startSession()
  
@@ -171,15 +164,8 @@ const path=file?.path
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
    
-
-   
-
-   // create a student (transaction-2)
+   // create a faculty (transaction-2)
     const newFaculty = await Faculty.create([payload], { session });
-
-    
-    
-    // console.log('newFaculty',newFaculty)
     
     if(!newFaculty){
       throw new appError(status.BAD_REQUEST,"failed to create faculty data")
@@ -193,7 +179,6 @@ const path=file?.path
 
   }
  catch (error) {
-  console.log(error)
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create faculty")
@@ -215,15 +200,12 @@ const createAdminIntoDB=async(file:any,password:string,payload:TAdmin)=>{
    // set admin email
   userData.email=payload?.email;
 
-  // console.log(userData)
-
    //find academic semester info
   const managementDepartment = await AcademicDepartment.findById(payload.managementDepartment)
   
   if (!managementDepartment) {
     throw new appError(404,"academic department not found");
   }
-//  console.log(academicDepartment)
 
  const session=await mongoose.startSession()
  try{
@@ -246,11 +228,9 @@ const path=file?.path
  
     }
 
-  
     //create a user (transcetion-1) 
    const newUser= await User.create([userData],{session}) //array
     
-   
    //create a faculty --------------
      if (!newUser.length) {
     throw new appError(status.BAD_REQUEST,"failed to create user")
@@ -261,29 +241,21 @@ const path=file?.path
     payload.id = newUser[0].id ;
     payload.user = newUser[0]._id; //reference _id
     
+   // create a admin (transaction-2)
+    const newAdmin = await Admin.create([payload], { session });
 
-   
-
-   // create a student (transaction-2)
-    const newFaculty = await Admin.create([payload], { session });
-
-    
-    
-    // console.log('newFaculty',newFaculty)
-    
-    if(!newFaculty){
+    if(!newAdmin){
       throw new appError(status.BAD_REQUEST,"failed to create Admin data")
     }
 
     await session.commitTransaction()
     await session.endSession()
     
-    return newFaculty; 
+    return newAdmin; 
    
 
   }
  catch (error) {
-  console.log(error)
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create Admin")  
