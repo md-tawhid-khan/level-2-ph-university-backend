@@ -14,8 +14,7 @@ const createdUserNameValidation = z.object({
 
 const createAdminValidation=z.object({
   body:z.object({
-    "admin":z.object({
-     
+    "admin":z.object({  
         "name":createdUserNameValidation,
         "designation":z.string(),
         "gender":z.string(),
@@ -25,7 +24,6 @@ const createAdminValidation=z.object({
         "emergencyContactNo":z.string(),
         "presentAddress":z.string(),
         "permanentAddress":z.string(),
-        "profileImage":z.string(),
         "managementDepartment":z.string(),
         "isDelete":z.boolean()
     })

@@ -54,8 +54,7 @@ required:true
 },
   profileImage:{
     type:String,
-    default:'',
-required:true
+    default:''  
 },
   
   managementDepartment:{

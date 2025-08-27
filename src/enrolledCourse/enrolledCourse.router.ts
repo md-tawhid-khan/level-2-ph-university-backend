@@ -10,6 +10,6 @@ const router= Router()
 
 router.post('/create-enrolled-course',authTokenValidation(USER_ROLE.student), validateRequest(enrolledCourseValidation.createEnrolledCourseValidationZodSchema), enrolledCourseController.createEnrolledCourseIntoDB)
 
-router.patch('/update-enrolled-course-marks',authTokenValidation(USER_ROLE.faculty), validateRequest(enrolledCourseValidation.updateEnrolledCourseValidationZodSchema), enrolledCourseController.updateEnrolledCourseMarks)
+router.patch('/update-enrolled-course-marks',authTokenValidation(USER_ROLE.faculty,USER_ROLE.superAdmin,USER_ROLE.admin), validateRequest(enrolledCourseValidation.updateEnrolledCourseValidationZodSchema), enrolledCourseController.updateEnrolledCourseMarks)
 
 export const enrolledCourseRouter=router
