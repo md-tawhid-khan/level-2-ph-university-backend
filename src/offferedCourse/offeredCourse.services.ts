@@ -116,12 +116,86 @@ const getMyOfferedCourseFromDB=async(studentId:string)=>{
 
   // find current on going semester 
 
-  const currentOngoingSemester=await SemesterRegistration.findOne({
+  const currentOngoingRegistrationSemester=await SemesterRegistration.findOne({
     status:"ONGOING"
   })
 
+  if(!currentOngoingRegistrationSemester){
+    throw new appError(status.NOT_FOUND,'there is no semester ongoing') 
+  }
 
-  return currentOngoingSemester
+  const result=await OfferedCourse.aggregate([
+    {
+      $match:{
+      semesterRegistration:currentOngoingRegistrationSemester?._id,
+      academicFaculty:student?.academicFaculty,
+      academicDepartment:student?.academicDepartment
+    }
+  },
+  {
+    $lookup:{
+      from:'courses',
+      localField:'course',
+      foreignField:'_id',
+      as:'course'
+    }
+  },
+  {
+    $unwind:'$course'
+  },
+  {
+    $lookup:{
+      from:'enrolledcourses',
+      let:{
+        currentOngoingSemesterRegistration:currentOngoingRegistrationSemester._id,
+        currentStudentId:student._id
+      },
+      pipeline:[
+        {
+          $match:{
+            $expr:{
+              $and:[
+                {
+                  $eq:['$semesterRegistration','$$currentOngoingSemesterRegistration']
+                },
+                {
+                  $eq:['$student','$$currentStudentId']
+                },
+                {
+                  $eq:['$isEnrolled',true]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      as:'enrolledCourses'
+    }
+  },
+  {
+    $addFields:{
+      isAlreadyEnrolled:{
+         $in:[
+        '$course._id',
+        {
+          $map:{
+            input:'$enrolledCourses',
+            as:'enrolled',
+            in:'$$enrolled.course'
+          }
+        }
+      ]
+      }     
+    }
+  },
+  {
+    $match:{
+      isAlreadyEnrolled:false
+    }
+  }
+  ])
+
+  return result
 }
 
 // get single offered course ------------
