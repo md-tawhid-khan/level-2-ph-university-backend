@@ -30,7 +30,7 @@ const getMyOfferedCourseFromDB=catchAsync(async(req:Request,res:Response)=>{
 
   const studentId=req.user?.userId;
 
-  const result=await offeredCourseServices.getMyOfferedCourseFromDB(studentId)
+  const result=await offeredCourseServices.getMyOfferedCourseFromDB(studentId, req.query)
   sendResponse(res,{
     statusCode:status.OK,
     success:true,

@@ -12,7 +12,7 @@ import { Faculty } from "../faculty/faculty.model";
 import { hasTimeConflict } from './offeredCourse.utils';
 import { Student } from '../student/student.model';
 import queryBilder from '../builder/queryBilder';
-import { query } from 'express';
+
 
 
 const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
@@ -106,7 +106,12 @@ const getAllOfferedCourseFromDB=async(query:Record<string,unknown>)=>{
 }
 
 // get my offered course from DB
-const getMyOfferedCourseFromDB=async(studentId:string)=>{
+const getMyOfferedCourseFromDB=async(studentId:string, query:Record<string,unknown>)=>{
+
+  const page= Number(query?.page)||1
+  const limit=Number(query?.limit)||10
+  const skip=(page-1)*limit
+
  // is student exists
   const student=await Student.findOne({id:studentId})
   if(!student){
@@ -124,7 +129,7 @@ const getMyOfferedCourseFromDB=async(studentId:string)=>{
     throw new appError(status.NOT_FOUND,'there is no semester ongoing') 
   }
 
-  const result=await OfferedCourse.aggregate([
+  const aggregationQuery= [
     {
       $match:{
       semesterRegistration:currentOngoingRegistrationSemester?._id,
@@ -240,9 +245,29 @@ const getMyOfferedCourseFromDB=async(studentId:string)=>{
       isPreRequisitesFulfilled:true
     }
   }
-  ])
+  ]
 
-  return result
+  const paginationQuery=[ {
+    $skip:skip
+  },
+{$limit:limit}
+]
+
+  const result=await OfferedCourse.aggregate([...aggregationQuery,...paginationQuery])
+
+  const total=(await OfferedCourse.aggregate(aggregationQuery)).length
+
+  const totalPage=Math.ceil(total/limit)
+
+  return {
+    meta:{
+      page,
+      limit,
+      total,
+      totalPage
+    },
+    result
+  }
 }
 
 // get single offered course ------------
