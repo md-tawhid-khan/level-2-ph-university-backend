@@ -1,13 +1,20 @@
+import { query } from 'express';
 import mongoose from "mongoose"
 import { TAdmin } from "./admin.interface"
 import { Admin } from "./admin.model"
 import appError from "../errors/appErrors"
 import status from "http-status"
 import { User } from "../user/user.model"
+import queryBilder from '../builder/queryBilder';
 
-const getAllAdminFromDB=async()=>{
-    const result=await Admin.find()
-    return result
+const getAllAdminFromDB=async(query:Record<string,unknown>)=>{
+  const adminQuery=new queryBilder(Admin.find(),query)
+    const result=await adminQuery.modelQuery;
+    const meta=await adminQuery.countTotal();
+    return {
+      meta,
+      result
+    }
 }
 
 const getSingleAdminFromDB=async(id:string)=>{

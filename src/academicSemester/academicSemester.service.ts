@@ -1,7 +1,9 @@
+
 import appError from '../errors/appErrors';
 import { academicSemesterNameCodeMapper } from './academicSemester.constant';
 import { TAcademicSemester } from './academicSemester.interface';
 import AcademicSemester from './academicSemester.model';
+import queryBilder from '../builder/queryBilder';
 
 const createAcademicSemesterIntoDB = async (data: TAcademicSemester) => {
   if (academicSemesterNameCodeMapper[data.name] !== data.code) {
@@ -12,9 +14,14 @@ const createAcademicSemesterIntoDB = async (data: TAcademicSemester) => {
   return result;
 };
 
-const getAllAcademicSemesterFromDB=async()=>{
-    const result= await AcademicSemester.find()
-    return result
+const getAllAcademicSemesterFromDB=async(query:Record<string,unknown>)=>{
+  const academicSemesterQuery= new queryBilder(AcademicSemester.find(),query)
+    const result= await academicSemesterQuery.modelQuery
+    const meta=await academicSemesterQuery.countTotal()
+    return {
+      meta,
+      result
+    }
 }
 
 const getSingleAcademicSemesterFromDB=async(id:string)=>{

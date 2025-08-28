@@ -1,3 +1,4 @@
+import queryBilder from "../builder/queryBilder";
 import { TAcademicDepartment } from "./academicDepartment.interface";
 import { AcademicDepartment } from "./academicDepartment.model";
 
@@ -6,9 +7,13 @@ const createAcademicDepartment=async(payload:TAcademicDepartment)=>{
     return result
 }
 
-const getAllAcademicDepartment=async()=>{
-    const result=await AcademicDepartment.find().populate('academicFaculty')
-    return result
+const getAllAcademicDepartment=async(query:Record<string,unknown>)=>{
+    const academicDepartmentQuery= new queryBilder(AcademicDepartment.find().populate('academicFaculty'),query)
+    const result=await academicDepartmentQuery.modelQuery
+    const meta=await academicDepartmentQuery.countTotal()
+    return {
+        meta,
+        result}
 }
 
 const getSingleAcademicDepartment=async(id:string)=>{

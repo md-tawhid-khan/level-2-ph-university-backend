@@ -10,11 +10,11 @@ const router=Router()
 
 router.post('/create-academic-faculty',authTokenValidation(USER_ROLE.admin,USER_ROLE.superAdmin),validateRequest(academicFacultyValidationSchema.createAcademicFacultyValidationSchema) ,academicFacultyController.createAcademicFacultyIntoDB)
 
-router.get('/',academicFacultyController.getAllAcademicFacultyFromDB)
+router.get('/',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin),academicFacultyController.getAllAcademicFacultyFromDB)
 
-router.get('/:facultyId',academicFacultyController.getSingleAcademicFacultyFromDB)
+router.get('/:facultyId',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin,USER_ROLE.faculty),academicFacultyController.getSingleAcademicFacultyFromDB)
 
-router.patch('/update/:facultyId',validateRequest(academicFacultyValidationSchema.updateAcademicFacultyValidationSchema), academicFacultyController.updateAcademicFacultyIntoDB)
+router.patch('/update/:facultyId',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin),validateRequest(academicFacultyValidationSchema.updateAcademicFacultyValidationSchema), academicFacultyController.updateAcademicFacultyIntoDB)
 
 export const academicFacultyRouter=router ;
 

@@ -12,7 +12,7 @@ router.post(
   validateRequest(academicSemesterValidation.createAcademicSemesterValidation),
   academicSemesterController.createAcademicSemesterController,
 );
-router.get('/',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.student), academicSemesterController.getAllAcademicSemesterFromDB)
+router.get('/',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin), authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.student), academicSemesterController.getAllAcademicSemesterFromDB)
 
 router.get('/:semesterId',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.student), academicSemesterController.getSingleAcademicSemesterFromDB)
 

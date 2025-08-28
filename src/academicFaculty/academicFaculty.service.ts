@@ -1,3 +1,4 @@
+import queryBilder from "../builder/queryBilder"
 import { TAcademicFaculty } from "./academicFaculty.interface"
 import { AcademicFaculty } from "./academicFaculty.model"
 
@@ -6,9 +7,13 @@ const createAcademicFacultyIntoDB=async(payload:TAcademicFaculty)=>{
     return result
 }
 
-const getAllAcademicFacultyFromDB=async()=>{
-    const result=await AcademicFaculty.find()
-    return result
+const getAllAcademicFacultyFromDB=async(query:Record<string,unknown>)=>{
+    const academicFacultyQuery=new queryBilder(AcademicFaculty.find(),query)
+    const result=await academicFacultyQuery.modelQuery
+    const meta =await academicFacultyQuery.countTotal()
+    return{
+        meta,
+         result}
 }
 
 const getSingleAcademicFacultyFromDB=async(id:string)=>{

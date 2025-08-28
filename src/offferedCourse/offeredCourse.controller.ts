@@ -16,12 +16,13 @@ const createOfferedCourse=catchAsync(async(req:Request,res:Response)=>{
 //  get all offered course from DB 
 
 const getAllOfferedCourseFromDB=catchAsync(async(req:Request,res:Response)=>{
-  const result=await offeredCourseServices.getAllOfferedCourseFromDB()
+  const result=await offeredCourseServices.getAllOfferedCourseFromDB(req.query)
   sendResponse(res,{
     statusCode:status.OK,
     success:true,
     message:'get all  offered course  successfully',
-    data:result
+    meta:result.meta,
+    data:result.result
   })
 })
 

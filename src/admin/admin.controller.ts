@@ -6,12 +6,13 @@ import { RequestHandler } from "express";
 
 const getAllAdminFromDB=catchAsync(async(req,res)=>{
 
-    const result=await adminServices.getAllAdminFromDB()
+    const result=await adminServices.getAllAdminFromDB(req.query)
      sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: 'successfully get all admin data',
-    data: result,
+    meta:result.meta,
+    data: result.result
   })
 
 })

@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import status from 'http-status';
 import AcademicSemester from '../academicSemester/academicSemester.model';
 import appError from '../errors/appErrors';
@@ -42,8 +41,12 @@ return result
 const getAllSemesterRegistration=async(query:Record<string , unknown>)=>{
     const semesterRegistration=new queryBilder(SemesterRegistration.find().populate('academicSemester'),query).fields().filter().paginate().sort()
 
-const result=await semesterRegistration.modelQuery 
-return result
+const result=await semesterRegistration.modelQuery
+const meta=await semesterRegistration.countTotal() 
+return {
+    meta,
+    result
+}
 }
 
 const getSingleSemesterRegistration=async(id:string)=>{

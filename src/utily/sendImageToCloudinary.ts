@@ -3,6 +3,8 @@ import config from '../app/config';
 import multer from 'multer';
 
 import fs from 'fs'
+import appError from '../errors/appErrors';
+import status from 'http-status';
 
 
 
@@ -28,13 +30,14 @@ import fs from 'fs'
         fs.unlink(path,()=>{
             // console.log('finally delete ')
         });
-    console.log("Local file deleted.");
+    // console.log("Local file deleted.");
 
    return uploadResult
 
     }
  catch(error) {
-           console.log(error);
+          //  console.log(error);
+          throw new appError(status.BAD_REQUEST, 'do not get image to upload in cloudinary')
        };
   
  } 

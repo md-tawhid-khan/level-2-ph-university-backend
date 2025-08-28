@@ -4,11 +4,19 @@ import { Faculty } from "./faculty.model"
 import appError from "../errors/appErrors"
 import status from "http-status"
 import { User } from "../user/user.model"
+import queryBilder from "../builder/queryBilder"
 
-const getAllFacultyFromDB=async()=>{
-     const result=await Faculty.find()
-     return result
-}
+const getAllFacultyFromDB=async(query:Record<string,unknown>)=>{
+  const facultyQuery=new queryBilder(Faculty.find(),query)
+     const result=await facultyQuery.modelQuery ;
+     const meta= await facultyQuery.countTotal()
+
+     return {
+      meta,
+      result 
+    }
+
+    }
 
 const getSingleFacultyFromDB=async(id:string)=>{
     const result=await Faculty.findById(id)

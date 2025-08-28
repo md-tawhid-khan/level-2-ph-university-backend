@@ -7,12 +7,13 @@ import { RequestHandler } from "express";
 
 const getAllFacultyFromDB=catchAsync(async(req,res)=>{
 
-    const result=await facultyServices.getAllFacultyFromDB()
+    const result=await facultyServices.getAllFacultyFromDB(req.query)
     sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: 'successfully get all faculty data',
-    data: result,
+    meta:result.meta,
+    data: result.result,
   })
 })
 

@@ -78,4 +78,4 @@ studentSchema.pre('aggregate',function(next){
 })
 
 
-export const Student = model<TStudent>('Students', studentSchema);
+export const Student = model<TStudent>('Student', studentSchema);

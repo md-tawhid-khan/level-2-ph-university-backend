@@ -12,10 +12,10 @@ router.post('/create-academic-department',authTokenValidation(USER_ROLE.superAdm
     validateRequest(academicDepartmentValidation.createAcademicDepartmentValidation),
     academicDepartmentController.createAcademicDepartment)
 
-router.get('/',academicDepartmentController.getAllAcademicDepartment)
+router.get('/',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin),academicDepartmentController.getAllAcademicDepartment)
 
-router.get('/:departmentId',academicDepartmentController.getSingleAcademicDepartment)
+router.get('/:departmentId',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin,USER_ROLE.faculty),academicDepartmentController.getSingleAcademicDepartment)
 
-router.patch('/update/:departmentId',validateRequest(academicDepartmentValidation.updateAcademicDepartmentValidation),academicDepartmentController.updateAcademicDepartment)
+router.patch('/update/:departmentId',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin),validateRequest(academicDepartmentValidation.updateAcademicDepartmentValidation),academicDepartmentController.updateAcademicDepartment)
 
 export const academicDepartmentRouter=router ;

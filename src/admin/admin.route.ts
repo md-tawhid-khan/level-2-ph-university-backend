@@ -7,9 +7,9 @@ import { USER_ROLE } from "../user/user.constant";
 
 const router=Router()
 
-router.get('',authTokenValidation(USER_ROLE.admin), adminController.getAllAdminFromDB);
-router.get('/:id',adminController.getSingleAdminFromDB);
-router.patch('/update/:adminId',validateRequest(adminValidation.updatedAdminValidation),adminController.updateAdminIntoDB);
-router.delete('/delete/:adminId',adminController.deleteAdmin);
+router.get('',authTokenValidation(USER_ROLE.superAdmin), adminController.getAllAdminFromDB);
+router.get('/:id',authTokenValidation(USER_ROLE.admin,USER_ROLE.superAdmin), adminController.getSingleAdminFromDB);
+router.patch('/update/:adminId',authTokenValidation(USER_ROLE.superAdmin), validateRequest(adminValidation.updatedAdminValidation),adminController.updateAdminIntoDB);
+router.delete('/delete/:adminId',authTokenValidation(USER_ROLE.superAdmin),adminController.deleteAdmin);
 
 export const adminRouter=router

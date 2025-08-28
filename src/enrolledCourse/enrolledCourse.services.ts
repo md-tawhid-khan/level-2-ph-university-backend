@@ -1,3 +1,4 @@
+import { query } from 'express';
 import { grade } from './enrolledCourse.constant';
 import status from "http-status"
 import appError from "../errors/appErrors"
@@ -10,6 +11,7 @@ import { SemesterRegistration } from "../semesterRegistration/semesterRegistrati
 import {  courseModel } from "../course/course.model"
 import { Faculty } from "../faculty/faculty.model"
 import { calculateGradeAndPoints } from "./enrolledCourse.utils"
+import queryBilder from '../builder/queryBilder';
 
 const createEnrolledCourseIntoDB=async(userId:string,payload:TEnrolledCourse)=>{
 /**
@@ -140,6 +142,26 @@ catch (error) {
 }
 }
 
+const getMyEnrolledCourseFromDB=async(studentId:string,query:Record<string,unknown>)=>{
+   
+    const student=await Student.findOne({id:studentId})
+
+    if(!student){
+        throw new appError(status.NOT_FOUND,'student not found')
+    }
+
+    const enrolledCoiurseQuery= new queryBilder(EnrolledCourse.find({student:student._id}).populate('semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course faculty student'),query)
+
+    const result=await enrolledCoiurseQuery.modelQuery ;
+  const meta= await enrolledCoiurseQuery.countTotal()
+
+  return {
+    meta,
+    result
+  }
+
+}
+
 const updateEnrolledCourseMarks=async(facultyId:string,payload:Partial<TEnrolledCourse>)=>{
     
     const {semesterRegistration,offeredCourse,student,courseMarks}=payload
@@ -208,5 +230,6 @@ if(courseMarks && Object.keys(courseMarks).length){
 
 export const enrolledCourseServices={
     createEnrolledCourseIntoDB,
+    getMyEnrolledCourseFromDB,
     updateEnrolledCourseMarks
 }
