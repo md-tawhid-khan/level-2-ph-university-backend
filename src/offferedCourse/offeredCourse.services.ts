@@ -173,7 +173,53 @@ const getMyOfferedCourseFromDB=async(studentId:string)=>{
     }
   },
   {
+    $lookup:{
+      from:'enrolledcourses',
+      let:{
+         currentStudentId:student._id
+      },
+      pipeline:[
+        {
+          $match:{
+            $expr:{
+              $and:[
+               {
+                $eq:['$student','$$currentStudentId']
+              },
+               {
+                $eq:['$isComplete',true]
+              },
+              ]
+            }
+          }
+        }
+      ],
+      as:'completedCourses'
+    }
+  },
+  {
     $addFields:{
+      completedCourseId:{
+        $map:{
+          input:'$completedCourses',
+          as:'completed',
+          in:'$$completed.course'
+        }
+      }
+    }
+  },
+  {
+    $addFields:{
+
+      isPreRequisitesFulfilled:{
+         $or:[
+          {$eq:['$course.preRequisiteCourse',[]]},
+          {$setIsSubset:[
+            '$course.preRequisiteCourse.course','$completedCourseId'
+          ]}
+         ]
+      },
+
       isAlreadyEnrolled:{
          $in:[
         '$course._id',
@@ -190,7 +236,8 @@ const getMyOfferedCourseFromDB=async(studentId:string)=>{
   },
   {
     $match:{
-      isAlreadyEnrolled:false
+      isAlreadyEnrolled:false,
+      isPreRequisitesFulfilled:true
     }
   }
   ])

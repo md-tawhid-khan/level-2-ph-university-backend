@@ -187,7 +187,7 @@ const updateEnrolledCourseMarks=async(facultyId:string,payload:Partial<TEnrolled
 
   if(courseMarks?.finalTerm){
      const {classTest1,midTerm,classTest2,finalTerm}=isCourseBelongsToFaculty.courseMarks ;
-     const totalMarks = Math.ceil(classTest1*0.10) + Math.ceil(midTerm*0.30) + Math.ceil(classTest2*0.10) + Math.ceil(finalTerm*0.50)
+     const totalMarks = Math.ceil(classTest1) + Math.ceil(midTerm) + Math.ceil(classTest2) + Math.ceil(finalTerm)
 
      const result= calculateGradeAndPoints(totalMarks)
 
