@@ -7,6 +7,7 @@ import status from 'http-status';
 import config from "../app/config";
 import { TUser_role } from "../user/user.interface";
 import { User } from "../user/user.model";
+import verifyToken from "../utily/verifyToken";
 
 const authTokenValidation = (...requiredRoles:TUser_role[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -18,15 +19,8 @@ const authTokenValidation = (...requiredRoles:TUser_role[]) => {
     }
 
  //--------------------
- let decoded
-    try {
-       decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
-
-    } catch (error) {
-      throw new appError(status.UNAUTHORIZED, "you are not authorized")
-    }
-    
-    
+   const decoded = verifyToken(token, config.jwt_access_secret as string) as JwtPayload
+     
     const {role ,userId:id,iat}=decoded;
     
 
