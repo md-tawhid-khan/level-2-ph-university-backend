@@ -8,7 +8,7 @@ const createAcademicFacultyIntoDB=async(payload:TAcademicFaculty)=>{
 }
 
 const getAllAcademicFacultyFromDB=async(query:Record<string,unknown>)=>{
-    const academicFacultyQuery=new queryBilder(AcademicFaculty.find(),query)
+    const academicFacultyQuery=new queryBilder(AcademicFaculty.find(),query).filter().sort().paginate().fields()
     const result=await academicFacultyQuery.modelQuery
     const meta =await academicFacultyQuery.countTotal()
     return{

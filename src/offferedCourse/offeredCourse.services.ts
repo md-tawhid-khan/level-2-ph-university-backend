@@ -1,9 +1,7 @@
 import { SemesterRegistration } from './../semesterRegistration/semesterRegistration.model';
 import { AcademicFaculty } from './../academicFaculty/academicFaculty.model';
-
 import status from "http-status";
 import appError from "../errors/appErrors";
-
 import {  TOfferedCourse } from "./offeredCourse.interface";
 import { OfferedCourse } from "./offeredCourse.model";
 import { AcademicDepartment } from "../academicDepartment/academicDepartment.model";

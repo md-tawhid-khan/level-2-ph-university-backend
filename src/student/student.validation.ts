@@ -30,7 +30,6 @@ const createStudentValidation = z.object({
     student: z.object({
       name: userNameValidation,
       gender: z.enum(['male', 'female', 'other']),
-      dateOfBirth: z.string(),
       email: z.string(),
       contactNo: z.string(),
       emergencyContactNo: z.string(),
@@ -39,8 +38,7 @@ const createStudentValidation = z.object({
       guardian: gurdianValidation,
       localGuardian: localGurdianValidation,
       admissionSemester:z.string(),
-      academicDepartment: z.string(),
-   
+      academicDepartment: z.string(),  
     }),
   }),
 });

@@ -8,7 +8,7 @@ const createAcademicDepartment=async(payload:TAcademicDepartment)=>{
 }
 
 const getAllAcademicDepartment=async(query:Record<string,unknown>)=>{
-    const academicDepartmentQuery= new queryBilder(AcademicDepartment.find().populate('academicFaculty'),query)
+    const academicDepartmentQuery= new queryBilder(AcademicDepartment.find().populate('academicFaculty'),query).filter().sort().paginate().fields()
     const result=await academicDepartmentQuery.modelQuery
     const meta=await academicDepartmentQuery.countTotal()
     return {

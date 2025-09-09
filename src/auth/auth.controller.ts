@@ -10,8 +10,11 @@ const loginUser=catchAsync(async(req,res)=>{
     const result=await authServices.loginUser(req.body)
     
     const { accessToken,refreshToken,needsPasswordChanges}=result;
+
+   
+
     res.cookie('refreshToken',refreshToken,{
-        secure:config.NODE_ENV === 'production',
+        secure:config.NODE_ENV === 'development',     
         httpOnly:true,
         sameSite:'none',
         maxAge:1000*60*60*24*365,

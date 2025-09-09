@@ -39,13 +39,13 @@ const studentSchema = new Schema({
   guardian: { type: guardianSchema },
   localGuardian: { type: localGuardianSchema },
   profileImage: { type: String ,default:''},
-  admissionSemester:{type:Schema.Types.ObjectId,
+  admissionSemester:{type:Schema.Types.ObjectId,required:true,
                        ref:'AcademicSemester'},
   academicDepartment: { type: Schema.Types.ObjectId,require:true,
                        ref:'AcademicDepartment'},
   academicFaculty : { type: Schema.Types.ObjectId,require:true,
                        ref:'AcademicFaculty'},                
-  isDeleted:{type:Boolean}                     
+  isDeleted:{type:Boolean,default:false}                     
 },
 {
   toJSON: {

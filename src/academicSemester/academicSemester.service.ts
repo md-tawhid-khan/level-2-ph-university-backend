@@ -15,7 +15,7 @@ const createAcademicSemesterIntoDB = async (data: TAcademicSemester) => {
 };
 
 const getAllAcademicSemesterFromDB=async(query:Record<string,unknown>)=>{
-  const academicSemesterQuery= new queryBilder(AcademicSemester.find(),query)
+  const academicSemesterQuery= new queryBilder(AcademicSemester.find(),query).filter().sort().paginate().fields()
     const result= await academicSemesterQuery.modelQuery
     const meta=await academicSemesterQuery.countTotal()
     return {
