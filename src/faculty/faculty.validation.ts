@@ -18,14 +18,12 @@ const createFacultyValidationSchema=z.object({
           name:userNameValidation,
           designation:z.string(),
           gender:z.string(),
-          dateOfBirth:z.string(),
           email:z.string(),
           contactNo:z.string(),
           emergencyContactNo:z.string(),
           presentAddress:z.string(),
           permanentAddress:z.string(),
           academicDepartment:z.string(),
-          isDelete:z.boolean()
     })
     })
 })

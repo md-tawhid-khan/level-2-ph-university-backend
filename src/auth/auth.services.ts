@@ -70,9 +70,7 @@ if(!isPasswordMatch){
 const changePassword=async(userData:{userId:string ; role:string},payload:{oldPassword:string,newPassword:string})=>{
 
      const isUserExist=await User.isUserExistByCustomId(userData?.userId)
-    
-      
-
+ 
     if(!isUserExist){
         throw new appError(status.NOT_FOUND,'do not find user in DB')
     }

@@ -7,7 +7,12 @@ import { User } from "../user/user.model"
 import queryBilder from "../builder/queryBilder"
 
 const getAllFacultyFromDB=async(query:Record<string,unknown>)=>{
-  const facultyQuery=new queryBilder(Faculty.find(),query)
+  const facultyQuery=new queryBilder(Faculty.find().populate({
+        path:'academicDepartment',
+        populate:{
+          path:'academicFaculty'
+        }
+      }).populate('user'),query).filter().sort().paginate().fields()
      const result=await facultyQuery.modelQuery ;
      const meta= await facultyQuery.countTotal()
 
@@ -19,7 +24,7 @@ const getAllFacultyFromDB=async(query:Record<string,unknown>)=>{
     }
 
 const getSingleFacultyFromDB=async(id:string)=>{
-    const result=await Faculty.findById(id)
+    const result=await Faculty.findById(id).populate('academicDepartment')
     return result
 }
 

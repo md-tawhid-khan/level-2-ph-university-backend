@@ -36,7 +36,7 @@ router.post(
 )
 
 router.post(
-  '/create-user-admin',authTokenValidation(USER_ROLE.superAdmin),
+  '/create-user-admin',authTokenValidation(USER_ROLE.superAdmin,USER_ROLE.admin),
   upload.single('file'),
   (req:Request,res:Response,next:NextFunction)=>{
     req.body=JSON.parse(req.body.data)

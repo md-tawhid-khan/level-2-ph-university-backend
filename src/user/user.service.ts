@@ -181,6 +181,7 @@ const path=file?.path
  catch (error) {
   await session.abortTransaction()
   await session.endSession()
+  
   throw new Error("failed to create faculty")
   
 }
@@ -256,6 +257,7 @@ const path=file?.path
 
   }
  catch (error) {
+  console.log(error)
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create Admin")  

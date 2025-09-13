@@ -64,6 +64,7 @@ ref:'AcademicDepartment'
 }, 
   isDelete:{
     type:Boolean,
+    default:false,
 required:true
  }   
 },

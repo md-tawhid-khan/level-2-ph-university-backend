@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 
 import status from "http-status";
 import catchAsync from "../utily/catchAsync";
@@ -26,9 +27,16 @@ const loginUser=catchAsync(async(req,res)=>{
         data:{accessToken,needsPasswordChanges}
     })
 })
+
+type TUser={
+    userId:string;
+    role:string ;
+}
+
 const changePassword=catchAsync(async(req,res)=>{
-   const user=req?.user?.jwtPayload;
-     
+    
+   const user=req?.user as TUser
+   
    const {...passwordData}=req.body ;
    
      const result=await authServices.changePassword(user,passwordData)

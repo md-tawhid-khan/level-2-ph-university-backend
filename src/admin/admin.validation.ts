@@ -18,14 +18,13 @@ const createAdminValidation=z.object({
         "name":createdUserNameValidation,
         "designation":z.string(),
         "gender":z.string(),
-        "dateOfBirth":z.string(),
         "email":z.string(),
         "contactNo":z.string(),
         "emergencyContactNo":z.string(),
         "presentAddress":z.string(),
         "permanentAddress":z.string(),
         "managementDepartment":z.string(),
-        "isDelete":z.boolean()
+       
     })
   })
 })

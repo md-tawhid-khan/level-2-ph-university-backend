@@ -1,4 +1,4 @@
-import { query } from 'express';
+
 import mongoose from "mongoose"
 import { TAdmin } from "./admin.interface"
 import { Admin } from "./admin.model"
@@ -8,7 +8,7 @@ import { User } from "../user/user.model"
 import queryBilder from '../builder/queryBilder';
 
 const getAllAdminFromDB=async(query:Record<string,unknown>)=>{
-  const adminQuery=new queryBilder(Admin.find(),query)
+  const adminQuery=new queryBilder(Admin.find().populate('managementDepartment'),query).filter().sort().paginate().fields()
     const result=await adminQuery.modelQuery;
     const meta=await adminQuery.countTotal();
     return {
@@ -18,7 +18,7 @@ const getAllAdminFromDB=async(query:Record<string,unknown>)=>{
 }
 
 const getSingleAdminFromDB=async(id:string)=>{
-    const result=await Admin.findById(id)
+    const result=await Admin.findById(id).populate('managementDepartment')
     return result
 }
 
