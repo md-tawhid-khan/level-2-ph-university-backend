@@ -176,26 +176,49 @@ const getfacultyCoursesFromDB=async(facultyId:string,query:Record<string,unknown
         throw new appError(status.NOT_FOUND,'student not found')
     }
 
-    
 
-    const facultyCourseQuery= new queryBilder(EnrolledCourse.find({academicFaculty:faculty.academicFaculty,
-        academicDepartment:faculty.academicDepartment, }).populate('semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course faculty student').populate({
-        path:'offeredCourse',
-        populate:{
-          path:'course'
-        }
-      }),query)
+
+    const facultyCourseQuery= new queryBilder(OfferedCourse.find({
+academicFaculty:faculty.academicFaculty,academicDepartment:faculty.academicDepartment, }).populate('academicDepartment academicFaculty academicSemester course semesterRegistration'),query)
 
     const result=await facultyCourseQuery.modelQuery ;
   const meta= await facultyCourseQuery.countTotal()
+
+//   console.log(result)
 
   return  {
     meta, 
     result,
   }
-  
-
 }
+
+// get all student in specific faculty in specific course and semester
+
+const getAllStudentInFacultyCoursesFromDB=async(facultyId:string,query:Record<string,unknown>)=>{
+
+    
+   
+    const faculty=await Faculty.findOne({id:facultyId})
+
+    if(!faculty){
+        throw new appError(status.NOT_FOUND,'student not found')
+    }
+
+
+    const facultyCourseQuery= new queryBilder(EnrolledCourse.find({
+academicFaculty:faculty.academicFaculty,academicDepartment:faculty.academicDepartment, }).populate('academicDepartment academicFaculty academicSemester course semesterRegistration student'),query)
+
+    const result=await facultyCourseQuery.modelQuery ;
+  const meta= await facultyCourseQuery.countTotal()
+
+
+  return  {
+    meta, 
+    result,
+  }
+}
+
+
 
 
 const updateEnrolledCourseMarks=async(facultyId:string,payload:Partial<TEnrolledCourse>)=>{
@@ -268,5 +291,6 @@ export const enrolledCourseServices={
     createEnrolledCourseIntoDB,
     getMyEnrolledCourseFromDB,
     updateEnrolledCourseMarks,
-    getfacultyCoursesFromDB
+    getfacultyCoursesFromDB,
+    getAllStudentInFacultyCoursesFromDB
 }

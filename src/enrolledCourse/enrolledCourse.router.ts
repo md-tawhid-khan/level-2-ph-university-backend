@@ -16,4 +16,6 @@ router.get('/my-enrolled-course',authTokenValidation(USER_ROLE.student),enrolled
 
 router.get('/my-faculty-courses',authTokenValidation(USER_ROLE.faculty, USER_ROLE.admin,USER_ROLE.superAdmin),enrolledCourseController.getfacultyCoursesFromDB)
 
+router.get('/get-allStudent-faculty-courses',authTokenValidation(USER_ROLE.faculty, USER_ROLE.admin,USER_ROLE.superAdmin),enrolledCourseController.getAllStudentInFacultyCoursesFromDB)
+
 export const enrolledCourseRouter=router
