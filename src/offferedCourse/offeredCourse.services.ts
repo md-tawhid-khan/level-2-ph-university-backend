@@ -94,7 +94,7 @@ const createOfferedCourseIntoDB=async (payload:TOfferedCourse)=>{
 // get all offered course from DB
 
 const getAllOfferedCourseFromDB=async(query:Record<string,unknown>)=>{
-  const offeredCourseQuery=new queryBilder(OfferedCourse.find(),query).filter().sort().paginate().fields()
+  const offeredCourseQuery=new queryBilder(OfferedCourse.find().populate('academicFaculty').populate('academicDepartment').populate('semesterRegistration').populate('course'),query).filter().sort().paginate().fields()
 
   const result=await offeredCourseQuery.modelQuery ;
   const meta= await offeredCourseQuery.countTotal()
@@ -122,10 +122,13 @@ const getMyOfferedCourseFromDB=async(studentId:string, query:Record<string,unkno
   const currentOngoingRegistrationSemester=await SemesterRegistration.findOne({
     status:"ONGOING"
   })
+    //  console.log({currentOngoingRegistrationSemester})
 
   if(!currentOngoingRegistrationSemester){
     throw new appError(status.NOT_FOUND,'there is no semester ongoing') 
   }
+
+  
 
   const aggregationQuery= [
     {
@@ -199,7 +202,7 @@ const getMyOfferedCourseFromDB=async(studentId:string, query:Record<string,unkno
       ],
       as:'completedCourses'
     }
-  },
+  }, 
   {
     $addFields:{
       completedCourseId:{

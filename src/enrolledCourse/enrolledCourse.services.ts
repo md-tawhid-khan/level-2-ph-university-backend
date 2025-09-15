@@ -1,5 +1,3 @@
-import { query } from 'express';
-import { grade } from './enrolledCourse.constant';
 import status from "http-status"
 import appError from "../errors/appErrors"
 import { OfferedCourse } from "../offferedCourse/offeredCourse.model"
@@ -150,7 +148,12 @@ const getMyEnrolledCourseFromDB=async(studentId:string,query:Record<string,unkno
         throw new appError(status.NOT_FOUND,'student not found')
     }
 
-    const enrolledCoiurseQuery= new queryBilder(EnrolledCourse.find({student:student._id}).populate('semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course faculty student'),query)
+    const enrolledCoiurseQuery= new queryBilder(EnrolledCourse.find({student:student._id}).populate('semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course faculty student').populate({
+        path:'offeredCourse',
+        populate:{
+          path:'course'
+        }
+      }),query)
 
     const result=await enrolledCoiurseQuery.modelQuery ;
   const meta= await enrolledCoiurseQuery.countTotal()
@@ -161,6 +164,39 @@ const getMyEnrolledCourseFromDB=async(studentId:string,query:Record<string,unkno
   }
 
 }
+
+
+const getfacultyCoursesFromDB=async(facultyId:string,query:Record<string,unknown>)=>{
+
+    
+   
+    const faculty=await Faculty.findOne({id:facultyId})
+
+    if(!faculty){
+        throw new appError(status.NOT_FOUND,'student not found')
+    }
+
+    
+
+    const facultyCourseQuery= new queryBilder(EnrolledCourse.find({academicFaculty:faculty.academicFaculty,
+        academicDepartment:faculty.academicDepartment, }).populate('semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course faculty student').populate({
+        path:'offeredCourse',
+        populate:{
+          path:'course'
+        }
+      }),query)
+
+    const result=await facultyCourseQuery.modelQuery ;
+  const meta= await facultyCourseQuery.countTotal()
+
+  return  {
+    meta, 
+    result,
+  }
+  
+
+}
+
 
 const updateEnrolledCourseMarks=async(facultyId:string,payload:Partial<TEnrolledCourse>)=>{
     
@@ -231,5 +267,6 @@ if(courseMarks && Object.keys(courseMarks).length){
 export const enrolledCourseServices={
     createEnrolledCourseIntoDB,
     getMyEnrolledCourseFromDB,
-    updateEnrolledCourseMarks
+    updateEnrolledCourseMarks,
+    getfacultyCoursesFromDB
 }

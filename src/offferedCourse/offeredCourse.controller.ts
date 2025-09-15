@@ -36,7 +36,7 @@ const getMyOfferedCourseFromDB=catchAsync(async(req:Request,res:Response)=>{
     statusCode:status.OK,
     success:true,
     message:'get my  offered course  successfully',
-    data:result
+    data:result.result
   })
 })
 

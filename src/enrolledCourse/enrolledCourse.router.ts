@@ -14,4 +14,6 @@ router.patch('/update-enrolled-course-marks',authTokenValidation(USER_ROLE.facul
 
 router.get('/my-enrolled-course',authTokenValidation(USER_ROLE.student),enrolledCourseController.getMyEnrolledCourseFromDB)
 
+router.get('/my-faculty-courses',authTokenValidation(USER_ROLE.faculty, USER_ROLE.admin,USER_ROLE.superAdmin),enrolledCourseController.getfacultyCoursesFromDB)
+
 export const enrolledCourseRouter=router

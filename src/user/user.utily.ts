@@ -2,10 +2,14 @@
 import { TAcademicSemester } from "../academicSemester/academicSemester.interface";
 import { User } from "./user.model";
 
-const findLastStudentId=async()=>{
+
+
+const findLastStudentId=async(year:string,courseCode:string)=>{
+    const regex = new RegExp(`^STU-${year}-${courseCode}`)
     const lastStudent=await User.findOne(
         {
-            role:"student"
+            role:"student",
+            id: { $regex: regex }
         },
     {
         id:1,
@@ -23,7 +27,7 @@ export const generateStudentId=async(payload:TAcademicSemester)=>{
 
     let currentId=(0).toString()
 
-    const lastStudentId=await findLastStudentId();
+    const lastStudentId=await findLastStudentId(payload.year,payload.code);
     
     //2030 01 0001
     const lastStudentSemesterCode=lastStudentId?.substring(9,11);
@@ -36,13 +40,14 @@ export const generateStudentId=async(payload:TAcademicSemester)=>{
         currentId=lastStudentId.substring(12)
     }
     
+    // console.log({currentId})
      
     let incrementId=(Number(currentId)+1).toString().padStart(4,'0')
 
-
+        // console.log({incrementId})
 
     incrementId=`STU-${payload.year}-${payload.code}${incrementId}`
-
+    //    console.log('last increment id',incrementId)
     return incrementId
 }
 

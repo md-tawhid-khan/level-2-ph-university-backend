@@ -97,7 +97,7 @@ const path=file?.path
     return newStudent;
   
 } catch (error) {
-  
+  console.log(error)
   await session.abortTransaction()
   await session.endSession()
   throw new Error("failed to create student")
